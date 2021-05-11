@@ -1,0 +1,129 @@
+/* 1. graphics ----------------------------------------- */
+
+.landing-container {
+  position: relative;
+  display: grid;
+  width: 45vw;
+  left: 5%;
+  top: 80px;
+  row-gap: 60px;
+}
+
+.brand {
+  font-family: 'Kodchasan', sans-serif;
+  font-size: 70px;
+  text-align: center;
+  color: tomato;
+}
+
+.tagline {
+  font-family: 'Kanit', sans-serif;
+  font-size: 25px;
+  font-style: italic;
+  text-align: center;
+  color: tomato;
+}
+
+.car-rent-img {
+  width: 100%;
+  height: auto;
+}
+
+
+/* 2. input form --------------------------------------- */
+
+.form-wrapper {
+  position: absolute;
+  height: 100vh;
+  top: 0px;
+  display: flex;
+  align-items: center;
+  right: 0px;
+  width: 30vw;
+
+  color: darkslategray;
+  font-family: 'Mukta', sans-serif;
+  font-weight: 400;
+}
+
+.form-title {
+  color: darkslategray;
+  font-family: 'Prompt', sans-serif;
+  font-weight: 500;
+}
+
+.input-body {
+  border-style: none;
+  border-radius: 14px;
+  height: 40px;
+  width: 200px;
+  text-indent: 10px;
+  color: darkslategray;
+}
+
+.input-body::placeholder {
+  opacity: 0.5;
+}
+
+.input-body:hover {
+  box-shadow: 0 1px 5px 0 gainsboro;
+}
+
+.input-body:focus {
+  outline: none;
+  border: 1px solid lightgrey;
+  border-radius: 14px;
+}
+
+
+/* 3. input button ------------------------------------- */
+
+.btn-apply {
+  background-color: tomato;
+  color: ghostwhite;
+  border-style: none;
+  border-radius: 14px;
+  width: 200px;
+  height: 40px;
+}
+
+.btn-apply:hover {
+  opacity: 0.8;
+}
+
+.btn-apply:focus {
+  outline: none;
+  border: 2px solid crimson;
+  border-radius: 14px;
+}
+
+.btn-apply:active {
+  border: none;
+  background-color: rgb(255, 38, 0);
+}
+
+
+/* 4. input background --------------------------------- */
+
+.wave {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 100vh; 
+}
+
+.wave1 {
+  width: 50vw; 
+  border-radius: 30% 0 0 80%; 
+  background-color: ghostwhite;
+  z-index: -9;
+  opacity: 0.8;
+}
+
+.wave2 {
+  width: 45vw; 
+  border-radius: 70% 0 0 50%; 
+  background-color: slategrey;
+  z-index: -10;
+  opacity: 0.3;
+}

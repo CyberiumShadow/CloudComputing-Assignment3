@@ -1,7 +1,9 @@
+import Login from './components/auth/login';
+
 function App() {
   return (
     <div>
-      <h1>Cloud Computing - Assignment 3</h1>
+      <Login/>
     </div>
   );
 }
