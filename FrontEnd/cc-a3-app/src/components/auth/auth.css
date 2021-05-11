@@ -1,36 +1,4 @@
-/* 1. graphics ----------------------------------------- */
-
-.landing-container {
-  position: relative;
-  display: grid;
-  width: 45vw;
-  left: 5%;
-  top: 80px;
-  row-gap: 60px;
-}
-
-.brand {
-  font-family: 'Kodchasan', sans-serif;
-  font-size: 70px;
-  text-align: center;
-  color: tomato;
-}
-
-.tagline {
-  font-family: 'Kanit', sans-serif;
-  font-size: 25px;
-  font-style: italic;
-  text-align: center;
-  color: tomato;
-}
-
-.car-rent-img {
-  width: 100%;
-  height: auto;
-}
-
-
-/* 2. input form --------------------------------------- */
+/* 1. input form --------------------------------------- */
 
 .form-wrapper {
   position: absolute;
@@ -40,14 +8,9 @@
   align-items: center;
   right: 0px;
   width: 30vw;
-
-  color: darkslategray;
-  font-family: 'Mukta', sans-serif;
-  font-weight: 400;
 }
 
 .form-title {
-  color: darkslategray;
   font-family: 'Prompt', sans-serif;
   font-weight: 500;
 }
@@ -76,7 +39,7 @@
 }
 
 
-/* 3. input button ------------------------------------- */
+/* 2. input button ------------------------------------- */
 
 .btn-apply {
   background-color: tomato;
@@ -103,7 +66,7 @@
 }
 
 
-/* 4. input background --------------------------------- */
+/* 3. input background --------------------------------- */
 
 .wave {
   position: absolute;

@@ -1,0 +1,90 @@
+/* 1. graphics ----------------------------------------- */
+
+.landing-container {
+  position: relative;
+  display: grid;
+  width: 45vw;
+  left: 5%;
+  top: 80px;
+  row-gap: 60px;
+}
+
+.brand {
+  font-family: 'Kodchasan', sans-serif;
+  font-size: 70px;
+  text-align: center;
+  color: tomato;
+}
+
+.tagline {
+  font-family: 'Kanit', sans-serif;
+  font-size: 25px;
+  font-style: italic;
+  text-align: center;
+  color: tomato;
+}
+
+.car-rent-img {
+  width: 100%;
+  height: auto;
+}
+
+
+/* 2. nav bar ------------------------------------------ */
+
+.nav-sidebar {
+  list-style-type: none;
+  position: fixed;
+  width: 256px;
+  height: 100vh;
+  top: 0;
+  margin: 0;
+  padding: 15px;
+  background-color: tomato;
+  overflow: auto;
+
+  font-family: 'Prompt', sans-serif;
+  font-weight: 400;
+}
+
+.nav-sidebar-brand {
+  font-family: 'Kodchasan', sans-serif;
+  text-align: center;
+  color: ghostwhite;
+  margin: 15px 0 25px 0;
+  pointer-events: none;
+}
+
+.nav-sidebar-list {
+  display: block;
+  color: mistyrose;
+  padding: 8px 26px;
+  margin: 3px 0;
+  text-decoration: none;
+  border-radius: 10px;
+  transition: all 0.35s ease;
+  -webkit-transition: all 0.35s ease;
+}
+
+.nav-sidebar-list:hover:not(.active) {
+  background-color: salmon;
+  color: white;
+}
+
+.nav-sidebar-divider {
+  color: white;
+}
+
+.nav-sidebar-footer {
+  position: absolute;
+  bottom: 0;
+  color: mistyrose;
+  padding: 8px 26px;
+  margin: 15px 0;
+  font-size: small;
+}
+
+.nav-sidebar-current {
+  background-color: salmon;
+  color: white;
+}

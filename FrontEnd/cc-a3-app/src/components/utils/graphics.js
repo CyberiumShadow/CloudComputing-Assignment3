@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './auth.css'
+import './utils.css'
 import CarRent from './car-rent.jpg';
 
 class Graphics extends Component {

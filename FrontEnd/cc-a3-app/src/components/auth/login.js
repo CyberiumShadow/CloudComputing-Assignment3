@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Link } from "react-router-dom"
+import { Link, withRouter } from "react-router-dom"
 import './auth.css'
-import Graphics from './graphics.js';
+import Graphics from 'components/utils/graphics';
 
 class Login extends Component {
   constructor(props) {
@@ -20,8 +20,8 @@ class Login extends Component {
   }
 
   handleSubmit(e) {
-    alert(this.state.username + ' ' + this.state.password);
     e.preventDefault();
+    this.props.history.push('/dashboard');
   }
 
   render() {
@@ -35,11 +35,11 @@ class Login extends Component {
             </div>
             <div className="form-group mb-3">
               <label>Username</label><br />
-              <input type="text" className="input-body" placeholder="enter username" spellCheck="false" required="true" name="username" value={this.state.username} onChange={this.handleChange} />
+              <input type="text" className="input-body" placeholder="enter username" spellCheck="false" name="username" value={this.state.username} onChange={this.handleChange} />
             </div>
             <div className="form-group mb-4">
               <label>Password</label><br />
-              <input type="password" className="input-body" placeholder="enter password" spellCheck="false" required="true" name="password" value={this.state.password} onChange={this.handleChange} />
+              <input type="password" className="input-body" placeholder="enter password" spellCheck="false" name="password" value={this.state.password} onChange={this.handleChange} />
             </div>
             <div className="form-group mb-3">
               <input type="submit" className="btn-apply" value="Login" />
@@ -58,4 +58,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default withRouter(Login);
