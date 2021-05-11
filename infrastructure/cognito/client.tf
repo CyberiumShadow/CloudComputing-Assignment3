@@ -2,9 +2,11 @@ resource "aws_cognito_user_pool_client" "login" {
   user_pool_id = aws_cognito_user_pool.login.id
 
   # APP CLIENTS
-  name                   = "login-client"
-  refresh_token_validity = 30
-  allowed_oauth_flows    = ["code"]
+  name                                 = "login-client"
+  refresh_token_validity               = 30
+  allowed_oauth_flows                  = ["code"]
+  allowed_oauth_flows_user_pool_client = true
+  allowed_oauth_scopes                 = ["aws.cognito.signin.user.admin", "openid"]
 
   # APP INTEGRATION -
   # APP CLIENT SETTINGS
