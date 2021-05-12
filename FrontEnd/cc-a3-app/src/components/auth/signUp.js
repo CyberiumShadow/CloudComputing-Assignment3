@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Auth } from 'aws-amplify';
+// import { Auth } from 'aws-amplify';
 import './auth.css';
 import Graphics from 'components/utils/graphics';
 
@@ -19,15 +19,15 @@ function SignUp(props) {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    try {
-      const { user } = await Auth.signUp({
-        username: form.username,
-        password: form.password
-      });
-      console.log(user);
-    } catch (error) {
-      console.log('error signing up:', error);
-    }
+    // try {
+    //   const { user } = await Auth.signUp({
+    //     username: form.username,
+    //     password: form.password
+    //   });
+    //   console.log(user);
+    // } catch (error) {
+    //   console.log('error signing up:', error);
+    // }
     // props.history.push('/login');
   }
 
@@ -52,7 +52,7 @@ function SignUp(props) {
           </div>
           <div className="form-group mb-3">
             <small>
-              Already have an account? <Link className="link" to={"/login"}>Login</Link>
+              Already have an account? <Link className="link" to={"/"}>Login</Link>
             </small>
           </div>
         </form>

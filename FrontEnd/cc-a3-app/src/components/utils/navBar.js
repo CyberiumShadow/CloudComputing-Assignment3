@@ -1,17 +1,21 @@
 import { Link, withRouter } from 'react-router-dom';
-import { Auth } from 'aws-amplify';
+// import { Auth } from 'aws-amplify';
 import './utils.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEdit, faCar, faHome, faPowerOff, faChartLine } from '@fortawesome/free-solid-svg-icons';
+import cognitoUtils from 'lib/cognitoUtils';
 
 function NavBar(props) {
-  const logout = async e => {
-    try {
-      await Auth.signOut();
-      props.history.push('/login');
-    } catch (error) {
-      console.log('error signing out: ', error);
-    }
+  const logout = e => {
+    e.preventDefault();
+    cognitoUtils.signOutCognitoSession();
+    props.history.push('/');
+    // try {
+    //   await Auth.signOut();
+    //   props.history.push('/');
+    // } catch (error) {
+    //   console.log('error signing out: ', error);
+    // }
   }
 
   return (
