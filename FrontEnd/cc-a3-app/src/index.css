@@ -38,9 +38,7 @@ input:-webkit-autofill:active {
 
 .link:focus {
   outline: none;
-  border: 1px solid crimson;
-  border-radius: 10px;
-  padding: 0px 2px 0px 2px;
+  text-decoration-line: underline;
 }
 
 .link:active {
