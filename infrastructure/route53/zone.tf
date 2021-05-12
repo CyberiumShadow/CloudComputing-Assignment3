@@ -4,8 +4,23 @@ variable "PoolDomainCF" {
 variable "PoolDomain" {
 }
 
+variable "CFDistribution" {
+}
+
 resource "aws_route53_zone" "main" {
   name = "neocar.link"
+}
+
+resource "aws_route53_record" "cdn" {
+  name = "cdn.neocar.link"
+  type = "A"
+  zone_id = aws_route53_zone.main.zone_id
+  alias {
+    evaluate_target_health = false
+    name                   = var.CFDistribution
+    # This zone_id is fixed
+    zone_id = "Z2FDTNDATAQYW2"
+  }
 }
 
 resource "aws_route53_record" "dummy" {
