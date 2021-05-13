@@ -51,7 +51,15 @@
   font-family: 'Kodchasan', sans-serif;
   text-align: center;
   color: ghostwhite;
-  margin: 15px 0 25px 0;
+  margin-top: 15px;
+  pointer-events: none;
+}
+
+.nav-sidebar-username {
+  text-align: center;
+  color: ghostwhite;
+  opacity: 0.6;
+  margin-bottom: 30px;
   pointer-events: none;
 }
 
@@ -80,6 +88,7 @@
   position: absolute;
   bottom: 0;
   color: mistyrose;
+  opacity: 0.6;
   padding: 8px 26px;
   margin: 15px 0;
   font-size: small;

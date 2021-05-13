@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-// import { Auth } from 'aws-amplify';
-import './auth.css';
+import { Link, useHistory } from 'react-router-dom';
+import { Auth } from 'aws-amplify';
 import Graphics from 'components/utils/graphics';
+import './auth.css';
 
-function SignUp(props) {
+function SignUp() {
+  const history = useHistory();
+
   const [form, setForm] = useState({
     username: '',
     password: ''
@@ -19,16 +21,15 @@ function SignUp(props) {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    // try {
-    //   const { user } = await Auth.signUp({
-    //     username: form.username,
-    //     password: form.password
-    //   });
-    //   console.log(user);
-    // } catch (error) {
-    //   console.log('error signing up:', error);
-    // }
-    // props.history.push('/login');
+    try {
+      await Auth.signUp({
+        username: form.username,
+        password: form.password
+      });
+      history.push('/');
+    } catch (error) {
+      console.log('error signing up:', error);
+    }
   }
 
   return (

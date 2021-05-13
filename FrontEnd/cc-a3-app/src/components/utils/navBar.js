@@ -1,27 +1,32 @@
 import { Link, withRouter } from 'react-router-dom';
-// import { Auth } from 'aws-amplify';
-import './utils.css';
+import { Auth } from 'aws-amplify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEdit, faCar, faHome, faPowerOff, faChartLine } from '@fortawesome/free-solid-svg-icons';
-import cognitoUtils from 'lib/cognitoUtils';
+import { useAppContext } from "libs/context";
+import config from 'config';
+import './utils.css';
 
 function NavBar(props) {
-  const logout = e => {
-    e.preventDefault();
-    cognitoUtils.signOutCognitoSession();
-    props.history.push('/');
-    // try {
-    //   await Auth.signOut();
-    //   props.history.push('/');
-    // } catch (error) {
-    //   console.log('error signing out: ', error);
-    // }
+  const { userHasAuthenticated } = useAppContext();
+  const username = localStorage.getItem('CognitoIdentityServiceProvider.' + config.cognito.APP_CLIENT_ID + '.LastAuthUser');
+
+  const logout = async e => {
+    try {
+      await Auth.signOut();
+      userHasAuthenticated(false);
+      props.history.push('/');
+    } catch (error) {
+      console.log('error signing out: ', error);
+    }
   }
 
   return (
     <div>
       <ul className="nav-sidebar">
         <h2 className="nav-sidebar-brand">NeoCar</h2>
+        <div className="nav-sidebar-username">
+          <small>{username}</small>
+        </div>
         <li>
           <Link className={`nav-sidebar-list ${props.currentPage === 'Dashboard' ? 'nav-sidebar-current' : ''}`} to={"/dashboard"}>
             <FontAwesomeIcon icon={faHome} fixedWidth /> Dashboard

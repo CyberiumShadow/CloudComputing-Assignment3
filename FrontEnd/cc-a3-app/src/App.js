@@ -1,32 +1,59 @@
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Route, Switch } from "react-router-dom";
+import { AppContext } from "libs/context";
+import { Auth } from "aws-amplify";
 
-// Auth files
-import Login from './components/auth/login';
-import SignUp from './components/auth/signUp';
-import Callback from './components/auth/callback';
+// Auth components
+import Login from 'components/auth/login';
+import SignUp from 'components/auth/signUp';
 
-// Main files
-import Dashboard from './components/main/dashboard';
-import Profile from './components/main/profile';
-import HireCar from './components/main/hireCar';
-import ListCar from './components/main/listCar';
-import Stats from './components/main/stats';
+// Auth routes
+import AuthenticatedRoute from 'components/auth/authenticatedRoute';
+import UnauthenticatedRoute from 'components/auth/unauthenticatedRoute';
+
+// Main components
+import Dashboard from 'components/main/dashboard';
+import Profile from 'components/main/profile';
+import HireCar from 'components/main/hireCar';
+import ListCar from 'components/main/listCar';
+import Stats from 'components/main/stats';
 
 function App() {
-  return (
-    <BrowserRouter>
-      <Switch>
-        <Route exact path="/" component={Login} />
-        <Route exact path="/callback" component={Callback}/>
-        <Route path="/signup" component={SignUp} />
+  const [isAuthenticating, setIsAuthenticating] = useState(true);
+  const [isAuthenticated, userHasAuthenticated] = useState(false);
 
-        <Route path="/dashboard" component={Dashboard} />
-        <Route path="/profile" component={Profile} />
-        <Route path="/hire-car" component={HireCar} />
-        <Route path="/list-car" component={ListCar} />
-        <Route path="/stats" component={Stats} />
-      </Switch>
-    </BrowserRouter>
+  useEffect(() => {
+    onLoad();
+  }, []);
+
+  const onLoad = async () => {
+    try {
+      await Auth.currentSession();
+      userHasAuthenticated(true);
+    }
+    catch(e) {
+      if (e !== 'No current user') {
+        console.log(e)
+      }
+    }
+    setIsAuthenticating(false);
+  }
+
+  return (
+    !isAuthenticating && (
+      <AppContext.Provider value={{ isAuthenticated, userHasAuthenticated }}>
+        <Switch>
+          <Route exact path="/"><Login /></Route>
+          <UnauthenticatedRoute exact path="/signup"><SignUp /></UnauthenticatedRoute>
+
+          <AuthenticatedRoute exact path="/dashboard"><Dashboard /></AuthenticatedRoute>
+          <AuthenticatedRoute exact path="/profile"><Profile /></AuthenticatedRoute>
+          <AuthenticatedRoute exact path="/hire-car"><HireCar /></AuthenticatedRoute>
+          <AuthenticatedRoute exact path="/list-car"><ListCar /></AuthenticatedRoute>
+          <AuthenticatedRoute exact path="/stats"><Stats /></AuthenticatedRoute>
+        </Switch>
+      </AppContext.Provider>
+    )
   );
 }
 
