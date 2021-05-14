@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { Auth } from 'aws-amplify';
+import Auth from '@aws-amplify/auth';
 import Graphics from 'components/utils/graphics';
 import LoadingButton from 'components/utils/loadingButton';
 import './auth.css';

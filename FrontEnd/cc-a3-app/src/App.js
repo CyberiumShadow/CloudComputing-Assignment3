@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Route, Switch } from "react-router-dom";
 import { AppContext } from "libs/context";
-import { Auth } from "aws-amplify";
+import Auth from "@aws-amplify/auth";
 
 // Auth components
 import Login from 'components/auth/login';

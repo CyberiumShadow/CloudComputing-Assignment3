@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import Amplify from 'aws-amplify';
+import Amplify from '@aws-amplify/core';
 import { BrowserRouter } from 'react-router-dom';
 import config from './config';
 import 'bootstrap/dist/css/bootstrap.min.css';
