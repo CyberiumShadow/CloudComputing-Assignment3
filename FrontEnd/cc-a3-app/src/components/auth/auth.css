@@ -15,6 +15,17 @@
   font-weight: 500;
 }
 
+.form-error {
+  font-style: italic;
+  color: orangered;
+  background-color: rgba(255, 220, 220, 0.3);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 69, 0, 0.7);
+  padding: 6px 12px;
+  line-height: 18px;
+  font-size: 14px;
+}
+
 .input-body {
   border-style: none;
   border-radius: 14px;
@@ -39,34 +50,7 @@
 }
 
 
-/* 2. input button ------------------------------------- */
-
-.btn-apply {
-  background-color: tomato;
-  color: ghostwhite;
-  border-style: none;
-  border-radius: 14px;
-  width: 200px;
-  height: 40px;
-}
-
-.btn-apply:hover {
-  opacity: 0.8;
-}
-
-.btn-apply:focus {
-  outline: none;
-  border: 1px solid crimson;
-  border-radius: 14px;
-}
-
-.btn-apply:active {
-  border: none;
-  background-color: rgb(255, 38, 0);
-}
-
-
-/* 3. input background --------------------------------- */
+/* 2. input background --------------------------------- */
 
 .wave {
   position: absolute;
