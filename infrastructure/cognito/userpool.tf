@@ -1,3 +1,10 @@
+variable "preSignupTrigger" {
+}
+
+output "cognitoArn" {
+  value = aws_cognito_user_pool.login.arn
+}
+
 resource "aws_cognito_user_pool" "login" {
   # This is choosen when creating a user pool in the console
   name = "login"
@@ -5,13 +12,18 @@ resource "aws_cognito_user_pool" "login" {
   # ATTRIBUTES
   alias_attributes = ["email", "preferred_username"]
 
+  lambda_config {
+    pre_sign_up = var.preSignupTrigger
+  }
+
   # POLICY
   password_policy {
-    minimum_length    = "8"
-    require_lowercase = false
-    require_numbers   = false
-    require_symbols   = false
-    require_uppercase = false
+    minimum_length                   = "8"
+    require_lowercase                = false
+    require_numbers                  = false
+    require_symbols                  = false
+    require_uppercase                = false
+    temporary_password_validity_days = 7
   }
 
   # MFA & VERIFICATIONS
@@ -25,9 +37,9 @@ resource "aws_cognito_user_pool" "login" {
     email_subject_by_link = "Welcome to to a new world and life!"
   }
 
-  email_configuration {
-    reply_to_email_address = "a-email-for-people-to@reply.to"
-  }
+  #email_configuration {
+  #  reply_to_email_address = "a-email-for-people-to@reply.to"
+  #}
 
   # TAGS
   tags = {

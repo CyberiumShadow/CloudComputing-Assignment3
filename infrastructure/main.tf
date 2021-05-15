@@ -8,15 +8,20 @@ terraform {
 }
 
 module "cognito" {
-  source  = "./cognito"
-  CertArn = module.route53.acmCert
+  source           = "./cognito"
+  CertArn          = module.route53.acmCert
+  preSignupTrigger = module.lambda.preSignupTrigger
 }
 
 module "route53" {
-  source       = "./route53"
+  source = "./route53"
+
   CFDistribution = module.s3.CFDistribution
-  PoolDomain   = module.cognito.PoolDomain
-  PoolDomainCF = module.cognito.PoolDomainCF
+  PoolDomain     = module.cognito.PoolDomain
+  PoolDomainCF   = module.cognito.PoolDomainCF
+  APIDomain      = module.api.APIDomain
+  APITarget      = module.api.APITarget
+  APIZone        = module.api.APIZone
 }
 
 module "dynamodb" {
@@ -27,4 +32,16 @@ module "s3" {
   source = "./s3"
 
   CertArn = module.route53.acmCert
+}
+
+module "api" {
+  source = "./api_gateway"
+
+  CertArn = module.route53.acmCert
+}
+
+module "lambda" {
+  source = "./lambda"
+
+  cognitoArn = module.cognito.cognitoArn
 }

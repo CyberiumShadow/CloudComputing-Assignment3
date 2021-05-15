@@ -8,6 +8,16 @@ resource "aws_s3_bucket" "neocar_uploads" {
   }
 }
 
+resource "aws_s3_bucket" "neocar_lambda" {
+  bucket = "neocar-lambda"
+  acl    = "private"
+
+  force_destroy = true
+  tags = {
+    Name = "Neocar Lambda Functions"
+  }
+}
+
 resource "aws_s3_bucket_policy" "neocar_uploads_policy" {
   bucket = aws_s3_bucket.neocar_uploads.id
 
