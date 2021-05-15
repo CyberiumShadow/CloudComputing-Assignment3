@@ -5,8 +5,6 @@ const dbClient = new DynamoDBClient({
 });
 
 exports.handler = async (event, context, callback) => {
-  // Set the user pool autoConfirmUser flag after validating the email domain
-  event.response.autoConfirmUser = true;
   const {userName, request: {userAttributes, validationData}} = event;
   const params = {
     TableName: "neocar_users",
