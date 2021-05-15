@@ -1,6 +1,9 @@
 variable "preSignupTrigger" {
 }
 
+variable "postConfirmTrigger" {
+}
+
 output "cognitoArn" {
   value = aws_cognito_user_pool.login.arn
 }
@@ -13,7 +16,8 @@ resource "aws_cognito_user_pool" "login" {
   alias_attributes = ["email", "preferred_username"]
 
   lambda_config {
-    pre_sign_up = var.preSignupTrigger
+    pre_sign_up       = var.preSignupTrigger
+    post_confirmation = var.postConfirmTrigger
   }
 
   # POLICY

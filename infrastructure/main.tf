@@ -8,9 +8,10 @@ terraform {
 }
 
 module "cognito" {
-  source           = "./cognito"
-  CertArn          = module.route53.acmCert
-  preSignupTrigger = module.lambda.preSignupTrigger
+  source             = "./cognito"
+  CertArn            = module.route53.acmCert
+  preSignupTrigger   = module.lambda.preSignupTrigger
+  postConfirmTrigger = module.lambda.postConfirmTrigger
 }
 
 module "route53" {
