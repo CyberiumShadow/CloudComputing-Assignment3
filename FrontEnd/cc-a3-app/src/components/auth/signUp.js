@@ -74,7 +74,7 @@ function SignUp() {
             <input type="password" className={styles.inputBody} placeholder="enter password" spellCheck={false} required={true} name="password" value={form.password} onChange={handleChange} />
           </div>
           <div className="form-group mb-3">
-            <LoadingButton isLoading={isLoading} text={'Create account'} disabled={error.length > 0}/>
+            <LoadingButton isLoading={isLoading} text={'Create account'} disabled={false}/>
           </div>
           <div className="form-group mb-3">
             <small>
