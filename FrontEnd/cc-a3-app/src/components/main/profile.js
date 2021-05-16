@@ -1,14 +1,14 @@
 import NavBar from 'components/utils/navBar';
-import './main.css';
+import styles from './main.module.css';
 
 function Profile() {
   return (
     <div>
       <NavBar currentPage={'Profile'} />
-      <div className="content-wrapper">
-        <h3 className="page-title">Profile</h3>
+      <div className={styles.contentWrapper}>
+        <h3 className={styles.pageTitle}>Profile</h3>
         <hr />
-        This page allows user to edit his/her personal and car information
+        This page allows user to view/edit personal information
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 /* 1. input form --------------------------------------- */
 
-.form-wrapper {
+.formWrapper {
   position: absolute;
   height: 100vh;
   top: 0px;
@@ -10,12 +10,12 @@
   width: 30vw;
 }
 
-.form-title {
+.formTitle {
   font-family: 'Prompt', sans-serif;
   font-weight: 500;
 }
 
-.form-error {
+.formError {
   font-style: italic;
   color: orangered;
   background-color: rgba(255, 220, 220, 0.3);
@@ -26,7 +26,7 @@
   font-size: 14px;
 }
 
-.input-body {
+.inputBody {
   border-style: none;
   border-radius: 14px;
   height: 40px;
@@ -35,15 +35,16 @@
   color: darkslategray;
 }
 
-.input-body::placeholder {
+.inputBody::placeholder {
   opacity: 0.5;
+  font-size: small;
 }
 
-.input-body:hover {
+.inputBody:hover {
   box-shadow: 0 1px 5px 0 gainsboro;
 }
 
-.input-body:focus {
+.inputBody:focus {
   outline: none;
   border: 1px solid lightgrey;
   border-radius: 14px;
