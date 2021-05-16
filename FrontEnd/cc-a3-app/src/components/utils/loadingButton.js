@@ -5,7 +5,7 @@ import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 function LoadingButton(props) {
   return !props.isLoading ? (
     <div>
-      <button type="submit" className="loading-btn">
+      <button type="submit" className={`loading-btn ${props.disabled ? 'btn-disabled' : ''}`} disabled={props.disabled}>
         {props.text}
       </button>
     </div>
