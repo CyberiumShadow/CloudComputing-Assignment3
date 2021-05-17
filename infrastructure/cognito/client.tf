@@ -6,8 +6,8 @@ resource "aws_cognito_user_pool_client" "login" {
   refresh_token_validity               = 30
   allowed_oauth_flows                  = ["code"]
   allowed_oauth_flows_user_pool_client = true
-  allowed_oauth_scopes                 = ["aws.cognito.signin.user.admin", "openid"]
-  explicit_auth_flows                  = ["ALLOW_CUSTOM_AUTH", "ALLOW_REFRESH_TOKEN_AUTH", "ALLOW_USER_SRP_AUTH"]
+  allowed_oauth_scopes                 = ["aws.cognito.signin.user.admin"]
+  explicit_auth_flows                  = ["ALLOW_REFRESH_TOKEN_AUTH", "ALLOW_USER_SRP_AUTH"]
 
   # APP INTEGRATION -
   # APP CLIENT SETTINGS
