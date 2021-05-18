@@ -12,7 +12,7 @@ function LoadingButton(props) {
   ) : (
     <div>
       <button type="submit" className="loading-btn loading" disabled={true}>
-        Loading <FontAwesomeIcon icon={faCircleNotch} size="sm" className="spinner" fixedWidth /> 
+        Loading <FontAwesomeIcon icon={faCircleNotch} size="sm" className="spinner" /> 
       </button>
     </div>
   )
