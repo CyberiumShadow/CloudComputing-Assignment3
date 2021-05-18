@@ -2,14 +2,18 @@ import React, { useState, useEffect } from 'react';
 import NavBar from 'components/utils/navBar';
 import styles from './main.module.css';
 import LoadingButton from 'components/utils/loadingButton';
+import axios from 'axios';
+import { useAppContext } from "libs/context";
 
 function ListCar() {
+  const { authentication } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
   const [image, setImage] = useState();
   const [form, setForm] = useState({
     make: '',
     model: '',
     year: '',
+    plate: '',
     price: '',
     minHour: '',
     address: ''
@@ -17,24 +21,27 @@ function ListCar() {
 
   const [error, setError] = useState({
     year: '',
+    plate: '',
     price: '',
     minHour: ''
   });
 
   useEffect(() => {
-    formValidation();
-  }, [form]);
-
-  const formValidation = () => {
+    // validate form
     const numbers = /^[0-9]+$/;
+    const plate = /^[A-Z0-9]+$/;
     setError({
       year: (form.year.length > 0 && !form.year.match(numbers)) ? 'Model year must be numeric' : '',
+      plate: (form.plate.length > 0 && !form.plate.match(plate)) ? 'License plate must contain only letters/numbers' : '',
       price: (form.price.length > 0 && !form.price.match(numbers)) ? 'List price must be numeric' : '',
       minHour: (form.minHour.length > 0 && !form.minHour.match(numbers)) ? 'Minimum hour must be numeric' : ''
     });
-  }
+  }, [form]);
 
   const handleChange = e => {
+    if (e.target.name === 'plate')
+      e.target.value = e.target.value.toUpperCase();
+
     setForm({
       ...form,
       [e.target.name]: e.target.value
@@ -52,22 +59,47 @@ function ListCar() {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    // setIsLoading(true);
     if (!isSubmissionValid()) return;
-    console.log('success', form, image);
-    // setIsLoading(false);
+
+    setIsLoading(true);
+
+    var formData = new FormData();
+    Object.keys(form).forEach((key) => {
+      formData.append(key, form[key])
+    })
+    formData.append('image', image); 
+    
+    // todo: fill in url
+    axios({
+      method: 'post',
+      url: '',
+      data: formData,
+      headers: { 
+        'Content-Type': 'multipart/form-data',
+        'Authorization':  authentication.accessToken
+      },
+    }).then(response => {
+      console.log(response);
+    }).catch(response => {
+      console.log(response); 
+    });
+
+    console.log(...formData)
+    setIsLoading(false);
   }
 
   const isSubmissionValid = () => {
     var errorYear = ((parseInt(form.year) < 2000 || parseInt(form.year) > 2021)) ? 'Model year must be between 2000 and 2021' : '';
-    var errorPrice = (parseInt(form.price) == 0) ? 'List price must be more than zero' : '';
+    var errorPlate = (form.plate.length < 2 || form.plate.length > 6) ? 'Licence plate must be between 2 to 6 letters/numbers' : '';
+    var errorPrice = (parseInt(form.price) === 0) ? 'List price must be more than zero' : '';
     var errorMinHour = (parseInt(form.minHour) < 1 || parseInt(form.minHour) > 48) ? 'Minimum hour must be between 1 and 48' : '';
     setError({
       year: errorYear,
+      plate: errorPlate,
       price: errorPrice,
       minHour: errorMinHour,
     });
-    return (errorYear.length === 0 && errorPrice.length === 0 && errorMinHour.length === 0);
+    return (errorYear.length === 0 && errorPlate.length === 0 && errorPrice.length === 0 && errorMinHour.length === 0);
   }
   
   return (
@@ -97,6 +129,14 @@ function ListCar() {
             }
           </div>
           <div className="form-group mb-3">
+            <label className={styles.inputTitle}>Licence Plate</label>
+            <input type="text" className={styles.inputBody} placeholder="ABC123" spellCheck={false} required={true} name="plate" value={form.plate} onChange={handleChange} />
+            {
+              error.plate.length > 0 &&
+               <span className={styles.inputError}>{error.plate}</span>
+            }  
+          </div>
+          <div className="form-group mb-3">
             <label className={styles.inputTitle}>List price per hour</label>
             <input type="text" className={styles.inputBody} placeholder="e.g. 20" spellCheck={false} required={true} name="price" value={form.price} onChange={handleChange} />
             {
@@ -121,7 +161,7 @@ function ListCar() {
             <input type="file" name="image" onChange={handleImageChange} required={true} />
           </div>
           <div className={`form-group ${styles.inputSubmit}`}>
-            <LoadingButton isLoading={isLoading} text={'Submit listing'} disabled={error.year.length > 0 || error.price.length > 0 || error.minHour.length > 0}/>
+            <LoadingButton isLoading={isLoading} text={'Submit listing'} disabled={error.year.length > 0 || error.plate.length > 0 || error.price.length > 0 || error.minHour.length > 0}/>
           </div>
         </form>     
       </div>

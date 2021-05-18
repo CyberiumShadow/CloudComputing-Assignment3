@@ -5,10 +5,11 @@ import { useAppContext } from "libs/context";
 import Graphics from 'components/utils/graphics';
 import LoadingButton from 'components/utils/loadingButton';
 import styles from './auth.module.css';
+import config from 'config';
 
 function Login() {
   const history = useHistory();
-  const { userHasAuthenticated } = useAppContext();
+  const { setAuthentication } = useAppContext();
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [form, setForm] = useState({
@@ -28,7 +29,13 @@ function Login() {
     setIsLoading(true);
     try {
       await Auth.signIn(form.username, form.password);
-      userHasAuthenticated(true);
+      const username = localStorage.getItem('CognitoIdentityServiceProvider.' + config.cognito.APP_CLIENT_ID + '.LastAuthUser');
+      const accessToken = localStorage.getItem('CognitoIdentityServiceProvider.' + config.cognito.APP_CLIENT_ID + '.' + username + '.accessToken');
+      setAuthentication({
+        isAuthenticated: true,
+        username: username,
+        accessToken: accessToken,
+      });
       history.push('/dashboard');
     } catch (error) {
       console.log('error signing in', error);

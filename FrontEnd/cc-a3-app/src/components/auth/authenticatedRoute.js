@@ -3,11 +3,11 @@ import { Route, Redirect } from 'react-router-dom';
 import { useAppContext } from 'libs/context';
 
 function AuthenticatedRoute({ children, ...rest }) {
-  const { isAuthenticated } = useAppContext();
+  const { authentication } = useAppContext();
   
   return (
     <Route {...rest}>
-      {isAuthenticated ? (children) : (<Redirect to={`/`} />)}
+      {authentication.isAuthenticated ? (children) : (<Redirect to={`/`} />)}
     </Route>
   );
 }

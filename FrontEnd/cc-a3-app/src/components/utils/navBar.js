@@ -3,17 +3,19 @@ import Auth from '@aws-amplify/auth';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEdit, faCar, faHome, faPowerOff, faChartLine } from '@fortawesome/free-solid-svg-icons';
 import { useAppContext } from "libs/context";
-import config from 'config';
 import './utils.css';
 
 function NavBar(props) {
-  const { userHasAuthenticated } = useAppContext();
-  const username = localStorage.getItem('CognitoIdentityServiceProvider.' + config.cognito.APP_CLIENT_ID + '.LastAuthUser');
+  const { authentication, setAuthentication } = useAppContext();
 
   const logout = async e => {
     try {
       await Auth.signOut();
-      userHasAuthenticated(false);
+      setAuthentication({
+        isAuthenticated: false,
+        username: '',
+        accessToken: '',
+      });
       props.history.push('/');
     } catch (error) {
       console.log('error signing out: ', error);
@@ -25,7 +27,7 @@ function NavBar(props) {
       <ul className="nav-sidebar">
         <h2 className="nav-sidebar-brand">NeoCar</h2>
         <div className="nav-sidebar-username">
-          <small>{username}</small>
+          <small>{authentication.username}</small>
         </div>
         <li>
           <Link className={`nav-sidebar-list ${props.currentPage === 'Dashboard' ? 'nav-sidebar-current' : ''}`} to={"/dashboard"}>

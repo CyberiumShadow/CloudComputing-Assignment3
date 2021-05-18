@@ -19,12 +19,12 @@ function querystring(name, url = window.location.href) {
 }
 
 function UnauthenticatedRoute({ children, ...rest }) {
-  const { isAuthenticated } = useAppContext();
+  const { authentication } = useAppContext();
   const redirect = querystring('redirect');
 
   return (
     <Route {...rest}>
-      {!isAuthenticated ? (
+      {!authentication.isAuthenticated ? (
         children
       ) : (
         <Redirect to={redirect === '' || redirect === null ? '/' : redirect} />
