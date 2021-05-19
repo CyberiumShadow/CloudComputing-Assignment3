@@ -38,7 +38,9 @@ module "s3" {
 module "api" {
   source = "./api_gateway"
 
-  CertArn = module.route53.acmCert
+  CertArn         = module.route53.acmCert
+  CognitoEndpoint = module.cognito.endpoint
+  CognitoClientID = module.cognito.userPoolID
 }
 
 module "lambda" {

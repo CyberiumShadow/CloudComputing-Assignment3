@@ -80,7 +80,7 @@ EOF
 }
 
 resource "aws_lambda_function" "cognitoTriggers" {
-  for_each =  local.lambdaFuncNames
+  for_each      = local.lambdaFuncNames
   s3_bucket     = "neocar-lambda"
   s3_key        = "v1.0.0/${each.value}.zip"
   function_name = "${each.value}_trigger"
@@ -96,7 +96,7 @@ resource "aws_lambda_function" "cognitoTriggers" {
 }
 
 resource "aws_lambda_permission" "allow_cognito" {
-  for_each = aws_lambda_function.cognitoTriggers
+  for_each      = aws_lambda_function.cognitoTriggers
   statement_id  = "AllowExecutionfromCognito"
   action        = "lambda:InvokeFunction"
   function_name = each.value.function_name
