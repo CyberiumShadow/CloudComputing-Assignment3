@@ -1,9 +1,11 @@
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import NavBar from "components/utils/navBar";
 import styles from "./main.module.css";
-import CarRent from "components/utils/car-rent.jpg";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import Car from "components/utils/car.jpg";
 
-// This page allows user to hire a car from a list of available cars
 function HireCar() {
   return (
     <div>
@@ -11,17 +13,31 @@ function HireCar() {
       <div className={styles.contentWrapper}>
         <h3 className={styles.pageTitle}>Hire car</h3>
         <hr />
+        *Todo: select time range*<br /><br />
+
         <div className="row">
-        
-          <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
-            <div className="card">
-            <img className="card-img-top" src={CarRent} alt="Car"></img>
-              <div className="card-body">
-                <h5 className="card-title">Toyota Corolla 2019</h5>
-                <h6 className="card-subtitle mb-2 text-muted">g4ge</h6>
-                <div>$20/hr (min 24hrs)</div>
+          <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12 mb-3">
+            <div className={`card ${styles.carCard}`}>
+            <img className={`card-img-top rounded-top ${styles.carCardImage}`} src={Car} alt="Car"></img>
+              <div className={`card-body rounded ${styles.carCardBody}`}>
+                <p className={`card-title ${styles.carCardTitle}`}>Toyota Corolla 2019</p>
+                <p className="card-subtitle mb-2 text-muted">g4ge</p>
+                <div>$10/hr (min 24hrs)</div>
                 <div><small>124 La Trobe St, Melbourne VIC 3000</small></div>
-                <Link className="stretched-link" to={"/dashboard"}></Link>
+                <Link className="stretched-link" to={"/hire-car/ABC123"}></Link>
+              </div>
+            </div>
+          </div>
+         
+          <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12 mb-3">
+            <div className={`card ${styles.carCard}`}>
+            <img className={`card-img-top rounded-top ${styles.carCardImage}`} src={Car} alt="Car"></img>
+              <div className={`card-body rounded ${styles.carCardBody}`}>
+                <p className={`card-title ${styles.carCardTitle}`}>Toyota Corolla 2019</p>
+                <p className="card-subtitle mb-2 text-muted">g4ge</p>
+                <div>$10/hr (min 24hrs)</div>
+                <div><small>124 La Trobe St, Melbourne VIC 3000</small></div>
+                <Link className="stretched-link" to={"/hire-car/ABC123"}></Link>
               </div>
             </div>
           </div>

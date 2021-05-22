@@ -15,6 +15,7 @@ import UnauthenticatedRoute from "components/auth/unauthenticatedRoute";
 import Dashboard from "components/main/dashboard";
 import Profile from "components/main/profile";
 import HireCar from "components/main/hireCar";
+import HiringCar from "components/main/hiringCar";
 import ListCar from "components/main/listCar";
 import Stats from "components/main/stats";
 
@@ -65,6 +66,9 @@ function App() {
           </AuthenticatedRoute>
           <AuthenticatedRoute exact path="/hire-car">
             <HireCar />
+          </AuthenticatedRoute>
+          <AuthenticatedRoute exact path="/hire-car/:carPlate">
+            <HiringCar />
           </AuthenticatedRoute>
           <AuthenticatedRoute exact path="/list-car">
             <ListCar />

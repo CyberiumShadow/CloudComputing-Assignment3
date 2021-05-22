@@ -165,7 +165,7 @@ function ListCar() {
             />
           </div>
           <div className="form-group mb-3">
-            <label className={styles.inputTitle}>Model Year</label>
+            <label className={styles.inputTitle}>Model year</label>
             <input
               type="text"
               className={styles.inputBody}
@@ -181,7 +181,7 @@ function ListCar() {
             )}
           </div>
           <div className="form-group mb-3">
-            <label className={styles.inputTitle}>Licence Plate</label>
+            <label className={styles.inputTitle}>Licence plate</label>
             <input
               type="text"
               className={styles.inputBody}
