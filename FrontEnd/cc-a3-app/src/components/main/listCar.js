@@ -1,29 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import NavBar from 'components/utils/navBar';
-import styles from './main.module.css';
-import LoadingButton from 'components/utils/loadingButton';
-import axios from 'axios';
-import { useAppContext } from 'libs/context';
+import React, { useState, useEffect } from "react";
+import NavBar from "components/utils/navBar";
+import styles from "./main.module.css";
+import LoadingButton from "components/utils/loadingButton";
+import axios from "axios";
+import { useAppContext } from "libs/context";
 
 function ListCar() {
   const { authentication } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
   const [image, setImage] = useState();
   const [form, setForm] = useState({
-    make: '',
-    model: '',
-    year: '',
-    plate: '',
-    price: '',
-    minHour: '',
-    address: '',
+    make: "",
+    model: "",
+    year: "",
+    plate: "",
+    price: "",
+    minHour: "",
+    address: "",
   });
 
   const [error, setError] = useState({
-    year: '',
-    plate: '',
-    price: '',
-    minHour: '',
+    year: "",
+    plate: "",
+    price: "",
+    minHour: "",
   });
 
   useEffect(() => {
@@ -33,25 +33,25 @@ function ListCar() {
     setError({
       year:
         form.year.length > 0 && !form.year.match(numbers)
-          ? 'Model year must be numeric'
-          : '',
+          ? "Model year must be numeric"
+          : "",
       plate:
         form.plate.length > 0 && !form.plate.match(plate)
-          ? 'License plate must contain only letters/numbers'
-          : '',
+          ? "License plate must contain only letters/numbers"
+          : "",
       price:
         form.price.length > 0 && !form.price.match(numbers)
-          ? 'List price must be numeric'
-          : '',
+          ? "List price must be numeric"
+          : "",
       minHour:
         form.minHour.length > 0 && !form.minHour.match(numbers)
-          ? 'Minimum hour must be numeric'
-          : '',
+          ? "Minimum hour must be numeric"
+          : "",
     });
   }, [form]);
 
   const handleChange = (e) => {
-    if (e.target.name === 'plate')
+    if (e.target.name === "plate")
       e.target.value = e.target.value.toUpperCase();
 
     setForm({
@@ -77,15 +77,15 @@ function ListCar() {
     Object.keys(form).forEach((key) => {
       formData.append(key, form[key]);
     });
-    formData.append('image', image);
+    formData.append("image", image);
 
     // todo: fill in url
     axios({
-      method: 'post',
-      url: 'http://localhost:3001/cars',
+      method: "post",
+      url: "http://localhost:3001/cars",
       data: formData,
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${authentication.accessToken}`,
       },
     })
@@ -103,18 +103,18 @@ function ListCar() {
   const isSubmissionValid = () => {
     var errorYear =
       parseInt(form.year) < 2000 || parseInt(form.year) > 2021
-        ? 'Model year must be between 2000 and 2021'
-        : '';
+        ? "Model year must be between 2000 and 2021"
+        : "";
     var errorPlate =
       form.plate.length < 2 || form.plate.length > 6
-        ? 'Licence plate must be between 2 to 6 letters/numbers'
-        : '';
+        ? "Licence plate must be between 2 to 6 letters/numbers"
+        : "";
     var errorPrice =
-      parseInt(form.price) === 0 ? 'List price must be more than zero' : '';
+      parseInt(form.price) === 0 ? "List price must be more than zero" : "";
     var errorMinHour =
       parseInt(form.minHour) < 1 || parseInt(form.minHour) > 48
-        ? 'Minimum hour must be between 1 and 48'
-        : '';
+        ? "Minimum hour must be between 1 and 48"
+        : "";
     setError({
       year: errorYear,
       plate: errorPlate,
@@ -131,7 +131,7 @@ function ListCar() {
 
   return (
     <div>
-      <NavBar currentPage={'ListCar'} />
+      <NavBar currentPage={"ListCar"} />
       <div className={styles.contentWrapper}>
         <h3 className={styles.pageTitle}>List car</h3>
         <hr />
@@ -255,7 +255,7 @@ function ListCar() {
           <div className={`form-group ${styles.inputSubmit}`}>
             <LoadingButton
               isLoading={isLoading}
-              text={'Submit listing'}
+              text={"Submit listing"}
               disabled={
                 error.year.length > 0 ||
                 error.plate.length > 0 ||

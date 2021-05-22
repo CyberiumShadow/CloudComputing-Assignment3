@@ -1,9 +1,9 @@
-import { Link, withRouter } from 'react-router-dom';
-import Auth from '@aws-amplify/auth';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faEdit, faCar, faHome, faPowerOff, faChartLine } from '@fortawesome/free-solid-svg-icons';
+import { Link, withRouter } from "react-router-dom";
+import Auth from "@aws-amplify/auth";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser, faEdit, faCar, faHome, faPowerOff, faChartLine } from "@fortawesome/free-solid-svg-icons";
 import { useAppContext } from "libs/context";
-import './utils.css';
+import "./utils.css";
 
 function NavBar(props) {
   const { authentication, setAuthentication } = useAppContext();
@@ -13,12 +13,12 @@ function NavBar(props) {
       await Auth.signOut();
       setAuthentication({
         isAuthenticated: false,
-        username: '',
-        accessToken: '',
+        username: "",
+        accessToken: "",
       });
-      props.history.push('/');
+      props.history.push("/");
     } catch (error) {
-      console.log('error signing out: ', error);
+      console.log("error signing out: ", error);
     }
   }
 
@@ -30,27 +30,27 @@ function NavBar(props) {
           <small>{authentication.username}</small>
         </div>
         <li>
-          <Link className={`nav-sidebar-list ${props.currentPage === 'Dashboard' ? 'nav-sidebar-current' : ''}`} to={"/dashboard"}>
+          <Link className={`nav-sidebar-list ${props.currentPage === "Dashboard" ? "nav-sidebar-current" : ""}`} to={"/dashboard"}>
             <FontAwesomeIcon icon={faHome} fixedWidth /> Dashboard
           </Link>
         </li>
         <li>
-          <Link className={`nav-sidebar-list ${props.currentPage === 'Profile' ? 'nav-sidebar-current' : ''}`} to={"/profile"}>
+          <Link className={`nav-sidebar-list ${props.currentPage === "Profile" ? "nav-sidebar-current" : ""}`} to={"/profile"}>
             <FontAwesomeIcon icon={faUser} fixedWidth /> Profile
           </Link>
         </li>
         <li>
-          <Link className={`nav-sidebar-list ${props.currentPage === 'HireCar' ? 'nav-sidebar-current' : ''}`} to={"/hire-car"}>
+          <Link className={`nav-sidebar-list ${props.currentPage === "HireCar" ? "nav-sidebar-current" : ""}`} to={"/hire-car"}>
             <FontAwesomeIcon icon={faCar} fixedWidth /> Hire car
           </Link>
         </li>
         <li>
-          <Link className={`nav-sidebar-list ${props.currentPage === 'ListCar' ? 'nav-sidebar-current' : ''}`} to={"/list-car"}>
+          <Link className={`nav-sidebar-list ${props.currentPage === "ListCar" ? "nav-sidebar-current" : ""}`} to={"/list-car"}>
             <FontAwesomeIcon icon={faEdit} fixedWidth /> List car
           </Link>
         </li>
         <li>
-          <Link className={`nav-sidebar-list ${props.currentPage === 'Stats' ? 'nav-sidebar-current' : ''}`} to={"/stats"}>
+          <Link className={`nav-sidebar-list ${props.currentPage === "Stats" ? "nav-sidebar-current" : ""}`} to={"/stats"}>
             <FontAwesomeIcon icon={faChartLine} fixedWidth /> Stats
           </Link>
         </li>

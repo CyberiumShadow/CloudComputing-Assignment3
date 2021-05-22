@@ -1,10 +1,10 @@
-import NavBar from 'components/utils/navBar';
-import styles from './main.module.css';
+import NavBar from "components/utils/navBar";
+import styles from "./main.module.css";
 
 function Stats() {
   return (
     <div>
-      <NavBar currentPage={'Stats'} />
+      <NavBar currentPage={"Stats"} />
       <div className={styles.contentWrapper}>
         <h3 className={styles.pageTitle}>Stats</h3>
         <hr />

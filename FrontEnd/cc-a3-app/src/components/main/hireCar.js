@@ -1,13 +1,13 @@
-import { Link } from 'react-router-dom';
-import NavBar from 'components/utils/navBar';
-import styles from './main.module.css';
-import CarRent from 'components/utils/car-rent.jpg';
+import { Link } from "react-router-dom";
+import NavBar from "components/utils/navBar";
+import styles from "./main.module.css";
+import CarRent from "components/utils/car-rent.jpg";
 
 // This page allows user to hire a car from a list of available cars
 function HireCar() {
   return (
     <div>
-      <NavBar currentPage={'HireCar'} />
+      <NavBar currentPage={"HireCar"} />
       <div className={styles.contentWrapper}>
         <h3 className={styles.pageTitle}>Hire car</h3>
         <hr />

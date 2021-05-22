@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import Auth from '@aws-amplify/auth';
-import { useAppContext } from 'libs/context';
-import Graphics from 'components/utils/graphics';
-import LoadingButton from 'components/utils/loadingButton';
-import styles from './auth.module.css';
+import React, { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
+import Auth from "@aws-amplify/auth";
+import { useAppContext } from "libs/context";
+import Graphics from "components/utils/graphics";
+import LoadingButton from "components/utils/loadingButton";
+import styles from "./auth.module.css";
 
 function Login() {
   const history = useHistory();
   const { setAuthentication } = useAppContext();
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [form, setForm] = useState({
-    username: '',
-    password: '',
+    username: "",
+    password: "",
   });
 
   const handleChange = (e) => {
@@ -33,12 +33,12 @@ function Login() {
         username: (await Auth.currentUserInfo()).username,
         accessToken: (await Auth.currentSession()).accessToken.jwtToken,
       });
-      history.push('/dashboard');
+      history.push("/dashboard");
     } catch (error) {
-      console.log('error signing in', error);
+      console.log("error signing in", error);
       let errorMsg = error.message;
       setError(
-        errorMsg.charAt(errorMsg.length - 1) === '.'
+        errorMsg.charAt(errorMsg.length - 1) === "."
           ? errorMsg.slice(0, -1)
           : errorMsg
       );
@@ -91,14 +91,14 @@ function Login() {
           <div className="form-group mb-3">
             <LoadingButton
               isLoading={isLoading}
-              text={'Login'}
+              text={"Login"}
               disabled={false}
             />
           </div>
           <div className="form-group mb-3">
             <small>
-              Don't have an account?{' '}
-              <Link className="link" to={'/signup'}>
+              Don"t have an account?{" "}
+              <Link className="link" to={"/signup"}>
                 Sign Up
               </Link>
             </small>

@@ -1,10 +1,10 @@
-import NavBar from 'components/utils/navBar';
-import styles from './main.module.css';
+import NavBar from "components/utils/navBar";
+import styles from "./main.module.css";
 
 function Dashboard() {
   return (
     <div>
-      <NavBar currentPage={'Dashboard'} />
+      <NavBar currentPage={"Dashboard"} />
       <div className={styles.contentWrapper}>
         <h3 className={styles.pageTitle}>Dashboard</h3>
         <hr />

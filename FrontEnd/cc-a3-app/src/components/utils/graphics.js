@@ -1,5 +1,5 @@
-import './utils.css';
-import CarRent from './car-rent.jpg';
+import "./utils.css";
+import CarRent from "./car-rent.jpg";
 
 function Graphics() {
   return (

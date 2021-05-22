@@ -10,14 +10,14 @@
 }
 
 .brand {
-  font-family: 'Kodchasan', sans-serif;
+  font-family: "Kodchasan", sans-serif;
   font-size: 70px;
   text-align: center;
   color: tomato;
 }
 
 .tagline {
-  font-family: 'Kanit', sans-serif;
+  font-family: "Kanit", sans-serif;
   font-size: 25px;
   font-style: italic;
   text-align: center;
@@ -43,12 +43,12 @@
   background-color: tomato;
   overflow: auto;
 
-  font-family: 'Prompt', sans-serif;
+  font-family: "Prompt", sans-serif;
   font-weight: 400;
 }
 
 .nav-sidebar-brand {
-  font-family: 'Kodchasan', sans-serif;
+  font-family: "Kodchasan", sans-serif;
   text-align: center;
   color: ghostwhite;
   margin-top: 15px;

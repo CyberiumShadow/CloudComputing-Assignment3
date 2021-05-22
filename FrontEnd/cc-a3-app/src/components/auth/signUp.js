@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import Auth from '@aws-amplify/auth';
-import Graphics from 'components/utils/graphics';
-import LoadingButton from 'components/utils/loadingButton';
-import styles from './auth.module.css';
+import React, { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
+import Auth from "@aws-amplify/auth";
+import Graphics from "components/utils/graphics";
+import LoadingButton from "components/utils/loadingButton";
+import styles from "./auth.module.css";
 
 function SignUp() {
   const history = useHistory();
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [form, setForm] = useState({
-    username: '',
-    password: ''
+    username: "",
+    password: ""
   });
 
   const handleChange = e => {
@@ -25,7 +25,7 @@ function SignUp() {
     e.preventDefault();
     setIsLoading(true);
     if (form.password.length < 8) {
-      setError('Password must have at least 8 characters');
+      setError("Password must have at least 8 characters");
       setIsLoading(false);
       return;
     }
@@ -35,16 +35,16 @@ function SignUp() {
         username: form.username,
         password: form.password
       });
-      history.push('/');
+      history.push("/");
     } catch (error) {
-      console.log('error signing up:', error);
-      if (error.name === 'UsernameExistsException') {
-        setError('User already exists');
-      } else if (error.name === 'InvalidParameterException') {
-        setError('Username or password must contain valid characters');
+      console.log("error signing up:", error);
+      if (error.name === "UsernameExistsException") {
+        setError("User already exists");
+      } else if (error.name === "InvalidParameterException") {
+        setError("Username or password must contain valid characters");
       } else {
         let errorMsg = error.message;
-        setError((errorMsg.charAt(errorMsg.length-1) === '.') ? errorMsg.slice(0, -1) : errorMsg);
+        setError((errorMsg.charAt(errorMsg.length-1) === ".") ? errorMsg.slice(0, -1) : errorMsg);
       }
       setIsLoading(false);
     }
@@ -58,27 +58,51 @@ function SignUp() {
           <div className="form-group mb-4">
             <h3 className={styles.formTitle}>Sign Up</h3>
           </div>
-          {
-            error.length > 0 &&
-              <div className={`form-group mb-3 ${styles.formError}`}>
-                <div>{error}</div>
-                <div>Please try again</div>
-              </div>
-          }
+          {error.length > 0 && (
+            <div className={`form-group mb-3 ${styles.formError}`}>
+              <div>{error}</div>
+              <div>Please try again</div>
+            </div>
+          )}
           <div className="form-group mb-3">
             <label>Username</label><br />
-            <input type="text" className={styles.inputBody} placeholder="enter username" spellCheck={false} required={true} name="username" value={form.username} onChange={handleChange} />
+            <input 
+              type="text" 
+              className={styles.inputBody} 
+              placeholder="enter username" 
+              spellCheck={false} 
+              required={true} 
+              name="username" 
+              value={form.username} 
+              onChange={handleChange} 
+            />
           </div>
           <div className="form-group mb-4">
             <label>Password</label><br />
-            <input type="password" className={styles.inputBody} placeholder="enter password" spellCheck={false} required={true} name="password" value={form.password} onChange={handleChange} />
+            <input 
+              type="password" 
+              className={styles.inputBody} 
+              placeholder="enter password" 
+              spellCheck={false} 
+              required={true} 
+              name="password" 
+              value={form.password} 
+              onChange={handleChange} 
+            />
           </div>
           <div className="form-group mb-3">
-            <LoadingButton isLoading={isLoading} text={'Create account'} disabled={false}/>
+            <LoadingButton 
+              isLoading={isLoading} 
+              text={"Create account"} 
+              disabled={false}
+            />
           </div>
           <div className="form-group mb-3">
             <small>
-              Already have an account? <Link className="link" to={"/"}>Login</Link>
+              Already have an account? {" "}
+              <Link className="link" to={"/"}>
+                Login
+              </Link>
             </small>
           </div>
         </form>

@@ -1,11 +1,11 @@
-import './utils.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
+import "./utils.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
 
 function LoadingButton(props) {
   return !props.isLoading ? (
     <div>
-      <button type="submit" className={`loading-btn ${props.disabled ? 'btn-disabled' : ''}`} disabled={props.disabled}>
+      <button type="submit" className={`loading-btn ${props.disabled ? "btn-disabled" : ""}`} disabled={props.disabled}>
         {props.text}
       </button>
     </div>
