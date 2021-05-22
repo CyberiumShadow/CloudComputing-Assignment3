@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import NavBar from "components/utils/navBar";
 import styles from "./main.module.css";
 import LoadingButton from "components/utils/loadingButton";
-import axios from "axios";
 import { useAppContext } from "libs/context";
 
 function ListCar() {
@@ -79,11 +78,9 @@ function ListCar() {
     });
     formData.append("image", image);
 
-    // todo: fill in url
-    axios({
+    fetch("http://localhost:3001/cars", {
       method: "post",
-      url: "http://localhost:3001/cars",
-      data: formData,
+      body: formData,
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${authentication.accessToken}`,
