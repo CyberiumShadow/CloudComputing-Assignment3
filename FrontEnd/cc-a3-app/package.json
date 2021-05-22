@@ -8,7 +8,8 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/react-fontawesome": "^0.1.14",
-    "bootstrap": "^5.0.0"
+    "bootstrap": "^5.0.0",
+    "react-datepicker": "^3.8.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.12.0",
