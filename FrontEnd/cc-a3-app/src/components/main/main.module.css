@@ -98,7 +98,50 @@
 }
 
 
-/* 4. hiring car ------------------------------------------- */
+/* 4. hire car ------------------------------------------- */
+
+.datePickerErrorWrapper {
+  margin: 5px 0 15px 0;
+}
+
+.datePickerError {
+  font-style: italic;
+  color: orangered;
+  background-color: rgba(255, 220, 220, 0.3);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 69, 0, 0.7);
+  padding: 3px 12px;
+  font-size: small;
+}
+
+.datePickerTitle {
+  width: 50px;
+}
+
+.datePickerBody {
+  border: 1px solid gainsboro;
+  border-radius: 6px;
+  color: darkslategray;
+  width: 200px;
+  height: 40px;
+  text-indent: 10px;
+}
+
+.datePickerBody:hover {
+  box-shadow: 0 1px 3px 0 lightgrey;
+}
+
+.datePickerBody:focus {
+  outline: none;
+  border: 1px solid rgb(220, 20, 60, 0.7);  
+}
+
+.selectTimeButton {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* 5. hiring car ------------------------------------------- */
 
 .hireCarImage {
   object-fit: contain;
@@ -137,7 +180,7 @@ td {
 .hireCardHeader {
   font-family: "Prompt", sans-serif;
   font-weight: 500;
-  padding: 15px 20px !important;
+  padding: 15px 15px !important;
   background-color: rgb(244, 244, 251) !important;
 }
 

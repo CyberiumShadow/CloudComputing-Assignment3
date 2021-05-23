@@ -26,7 +26,7 @@ function HiringCar() {
           </div>
           <div className="col-xl-8 col-lg-7 col-md-12 col-sm-12 col-12 mb-3">
             <h6 className={`mb-3 ${styles.formTitle}`}>Car info</h6>
-            <div class="table-responsive">
+            <div className="table-responsive">
               <table className={`table table-sm table-hover w-auto ${styles.tableTopBorder}`}>
                 <tbody>
                   <tr>
@@ -73,7 +73,7 @@ function HiringCar() {
             <div className={`card ${styles.hireCard}`}>  
             <h6 className={`card-header ${styles.hireCardHeader}`}>Hire details</h6>
               <div className="card-body">
-                <div class="table-responsive mb-1">
+                <div className="table-responsive mb-1">
                   <table className="table table-sm table-hover">
                     <tbody>
                       <tr>
