@@ -76,6 +76,7 @@ function ListCar() {
     Object.keys(form).forEach((key) => {
       formData.append(key, form[key]);
     });
+    formData.append("owner", authentication.username);
     formData.append("image", image);
 
     fetch("http://localhost:3001/cars", {

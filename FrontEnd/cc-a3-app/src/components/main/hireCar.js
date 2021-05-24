@@ -14,7 +14,10 @@ import { faClock } from "@fortawesome/free-solid-svg-icons";
 
 function HireCar() {
   const date = new Date();
-  const initialDate = setHours(setMinutes(setSeconds(date, 0), 0), date.getHours() + 1)
+  const initialDate = setHours(
+    setMinutes(setSeconds(date, 0), 0),
+    date.getHours() + 1
+  );
   const maxTime = setHours(setMinutes(date, 59), 23);
   const dateFormat = "dd MMMM yyyy, h:mm aa";
 
@@ -22,7 +25,7 @@ function HireCar() {
   const [startDate, setStartDate] = useState(initialDate);
   const [endDate, setEndDate] = useState(initialDate);
   const [error, setError] = useState("");
-  
+
   let currentStartHour = initialDate.getHours();
   let currentEndHour = initialDate.getHours();
   let currentStartMins = initialDate.getMinutes();
@@ -47,10 +50,11 @@ function HireCar() {
   };
 
   const isDateValid = () => {
-    let errorDate = (+startDate >= +endDate)
-      ? "Start date must be earlier than end date. Please select again."
-      : "";
-    
+    let errorDate =
+      +startDate >= +endDate
+        ? "Start date must be earlier than end date. Please select again."
+        : "";
+
     setError(errorDate);
     return errorDate.length === 0;
   };
@@ -63,7 +67,7 @@ function HireCar() {
         <hr />
         <div className="row">
           <div className="col-12 mb-5">
-            <div className={`card ${styles.hireCard}`}> 
+            <div className={`card ${styles.hireCard}`}>
               <h6 className={`card-header ${styles.hireCardHeader}`}>
                 <FontAwesomeIcon icon={faClock} fixedWidth /> Pick your time
               </h6>
@@ -81,12 +85,15 @@ function HireCar() {
                         className={styles.datePickerBody}
                         dateFormat={dateFormat}
                         selected={startDate}
-                        onChange={date => setStartDate(date)}
+                        onChange={(date) => setStartDate(date)}
                         selectsStart
                         showTimeSelect
                         minDate={initialDate}
                         maxDate={endDate}
-                        minTime={setHours(setMinutes(initialDate, currentStartMins), currentStartHour)}
+                        minTime={setHours(
+                          setMinutes(initialDate, currentStartMins),
+                          currentStartHour
+                        )}
                         maxTime={maxTime}
                         startDate={startDate}
                         endDate={endDate}
@@ -99,18 +106,23 @@ function HireCar() {
                         className={styles.datePickerBody}
                         dateFormat={dateFormat}
                         selected={endDate}
-                        onChange={date => setEndDate(date)}
+                        onChange={(date) => setEndDate(date)}
                         selectsEnd
                         showTimeSelect
                         minDate={startDate}
-                        minTime={setHours(setMinutes(initialDate, currentEndMins), currentEndHour)}
+                        minTime={setHours(
+                          setMinutes(initialDate, currentEndMins),
+                          currentEndHour
+                        )}
                         maxTime={maxTime}
                         startDate={startDate}
                         endDate={endDate}
                         timeIntervals={60}
                       />
                     </div>
-                    <div className={`col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 ${styles.selectTimeButton} mt-1 mb-1`}>
+                    <div
+                      className={`col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 ${styles.selectTimeButton} mt-1 mb-1`}
+                    >
                       <LoadingButton
                         isLoading={isLoading}
                         text={"Select time"}
@@ -127,31 +139,46 @@ function HireCar() {
         <div className="row">
           <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12 mb-3">
             <div className={`card ${styles.carCard}`}>
-            <img className={`card-img-top rounded-top ${styles.carCardImage}`} src={Car} alt="Car"></img>
+              <img
+                className={`card-img-top rounded-top ${styles.carCardImage}`}
+                src={Car}
+                alt="Car"
+              ></img>
               <div className={`card-body rounded ${styles.carCardBody}`}>
-                <p className={`card-title ${styles.carCardTitle}`}>Toyota Corolla 2019</p>
+                <p className={`card-title ${styles.carCardTitle}`}>
+                  Toyota Corolla 2019
+                </p>
                 <p className="card-subtitle mb-2 text-muted">g4ge</p>
                 <div>$10/hr (min 24hrs)</div>
-                <div><small>124 La Trobe St, Melbourne VIC 3000</small></div>
+                <div>
+                  <small>124 La Trobe St, Melbourne VIC 3000</small>
+                </div>
                 <Link className="stretched-link" to={"/hire-car/ABC123"}></Link>
               </div>
             </div>
           </div>
-         
+
           <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12 mb-3">
             <div className={`card ${styles.carCard}`}>
-            <img className={`card-img-top rounded-top ${styles.carCardImage}`} src={Car} alt="Car"></img>
+              <img
+                className={`card-img-top rounded-top ${styles.carCardImage}`}
+                src={Car}
+                alt="Car"
+              ></img>
               <div className={`card-body rounded ${styles.carCardBody}`}>
-                <p className={`card-title ${styles.carCardTitle}`}>Toyota Corolla 2019</p>
+                <p className={`card-title ${styles.carCardTitle}`}>
+                  Toyota Corolla 2019
+                </p>
                 <p className="card-subtitle mb-2 text-muted">g4ge</p>
                 <div>$10/hr (min 24hrs)</div>
-                <div><small>124 La Trobe St, Melbourne VIC 3000</small></div>
+                <div>
+                  <small>124 La Trobe St, Melbourne VIC 3000</small>
+                </div>
                 <Link className="stretched-link" to={"/hire-car/ABC123"}></Link>
               </div>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );
