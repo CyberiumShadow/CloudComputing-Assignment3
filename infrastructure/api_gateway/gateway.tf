@@ -1,6 +1,12 @@
 variable "CertArn" {
 }
 
+variable "VPCSubnets" {
+}
+
+variable "LBSecurityGroup" {
+}
+
 output "APIDomain" {
   value = aws_apigatewayv2_domain_name.neocar_api.domain_name
 }
@@ -32,4 +38,10 @@ resource "aws_apigatewayv2_domain_name" "neocar_api" {
     endpoint_type   = "REGIONAL"
     security_policy = "TLS_1_2"
   }
+}
+
+resource "aws_apigatewayv2_vpc_link" "vpclink" {
+  name               = "neocar_vpclink"
+  security_group_ids = [var.LBSecurityGroup]
+  subnet_ids         = var.VPCSubnets
 }

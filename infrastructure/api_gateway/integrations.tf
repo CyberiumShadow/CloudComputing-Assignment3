@@ -1,6 +1,11 @@
+variable "LBListener" {
+}
+
 resource "aws_apigatewayv2_integration" "cars" {
-  api_id = aws_apigatewayv2_api.neocar_api.id
-  integration_type = "HTTP_PROXY"
+  api_id             = aws_apigatewayv2_api.neocar_api.id
+  integration_type   = "HTTP_PROXY"
   integration_method = "GET"
-  integration_uri = "https://api.thecatapi.com/v1/images/search"
+  integration_uri    = var.LBListener
+  connection_type    = "VPC_LINK"
+  connection_id      = aws_apigatewayv2_vpc_link.vpclink.id
 }
