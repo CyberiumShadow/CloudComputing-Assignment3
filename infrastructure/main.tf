@@ -41,10 +41,27 @@ module "api" {
   CertArn         = module.route53.acmCert
   CognitoEndpoint = module.cognito.endpoint
   CognitoClientID = module.cognito.userPoolID
+  VPCSubnets      = module.ecs.private_subnets
+  LBSecurityGroup = module.ecs.security_group
+  LBListener      = module.ecs.lb_listener
 }
 
 module "lambda" {
   source = "./lambda"
 
   cognitoArn = module.cognito.cognitoArn
+}
+
+module "ecr" {
+  source = "./ecr"
+}
+
+module "ecs" {
+  source = "./ecs"
+
+  ecr_repo = module.ecr.ecr_repo_url
+}
+
+output "ecr_repo_url" {
+  value = module.ecr.ecr_repo_url
 }
