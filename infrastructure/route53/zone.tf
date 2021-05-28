@@ -16,6 +16,10 @@ variable "APITarget" {
 variable "APIZone" {
 }
 
+variable "ebs_url" {
+
+}
+
 resource "aws_route53_zone" "main" {
   name = "neocar.link"
 }
@@ -32,12 +36,15 @@ resource "aws_route53_record" "cdn" {
   }
 }
 
-resource "aws_route53_record" "dummy" {
+resource "aws_route53_record" "frontend" {
   name    = "neocar.link"
   type    = "A"
   zone_id = aws_route53_zone.main.zone_id
-  ttl     = "60"
-  records = ["1.1.1.1"]
+  alias {
+    evaluate_target_health = false
+    name                   = var.ebs_url
+    zone_id                = "Z117KPS5GTRQ2G"
+  }
 }
 
 resource "aws_route53_record" "auth-cognito-A" {

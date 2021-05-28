@@ -23,6 +23,7 @@ module "route53" {
   APIDomain      = module.api.APIDomain
   APITarget      = module.api.APITarget
   APIZone        = module.api.APIZone
+  ebs_url        = module.beanstalk.env_url
 }
 
 module "dynamodb" {
@@ -60,6 +61,10 @@ module "ecs" {
   source = "./ecs"
 
   ecr_repo = module.ecr.ecr_repo_url
+}
+
+module "beanstalk" {
+  source = "./beanstalk"
 }
 
 output "ecr_repo_url" {
