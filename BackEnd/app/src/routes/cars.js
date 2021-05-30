@@ -1,15 +1,44 @@
 const express = require('express');
 const multer = require('multer');
-const { GetItemCommand, PutItemCommand } = require('@aws-sdk/client-dynamodb');
+const {
+  GetItemCommand,
+  PutItemCommand,
+  ScanCommand,
+  BatchGetItemCommand,
+} = require('@aws-sdk/client-dynamodb');
 const { PutObjectCommand } = require('@aws-sdk/client-s3');
+const { nanoid } = require('nanoid');
 const { dbClient, s3Client } = require('../lib/aws');
 
 const router = express.Router();
 const uploader = multer();
 
-router.get('/', (req, res) => {
-  console.log(res.locals);
-  res.status(501).send('Not Implemented');
+const processItems = (data) => {
+  const processedData = [];
+  data.map((car) => {
+    processedData.push({
+      licence_plate: car.licence_plate.S,
+      ...(car.make && { make: car.make.S }),
+      ...(car.model && { model: car.model.S }),
+      ...(car.owner && { owner: car.owner.S }),
+      ...(car.year && { year: car.year.N }),
+      ...(car.price && { price: car.price.N }),
+      ...(car.minHour && { owner: car.minHour.N }),
+      ...(car.address && { address: car.address.S }),
+    });
+  });
+  return processedData;
+};
+
+router.get('/', async (req, res) => {
+  const carParams = {
+    TableName: 'cars',
+  };
+  // const { Items } = await dbClient.send(new ScanCommand(bookingParams));
+  const { Items } = await dbClient.send(new ScanCommand(carParams));
+  if (Items.length === 0)
+    return res.status(200).json({ message: 'No result is retrieved. Please query again' });
+  return res.status(200).json(processItems(Items));
 });
 
 router.post('/', uploader.single('image'), async (req, res) => {
@@ -30,7 +59,7 @@ router.post('/', uploader.single('image'), async (req, res) => {
   };
   const { Item } = await dbClient.send(new GetItemCommand(params));
   if (!Item) {
-    const newUserParams = {
+    const newCarParams = {
       TableName: 'cars',
       Item: {
         owner: { S: owner },
@@ -43,15 +72,29 @@ router.post('/', uploader.single('image'), async (req, res) => {
         address: { S: address },
       },
     };
-    await dbClient.send(new PutItemCommand(newUserParams));
+    await dbClient.send(new PutItemCommand(newCarParams));
     await s3Client.send(new PutObjectCommand(uploadParams));
     return res.status(200).send({ message: 'Car Listed' });
   }
   return res.status(409).json({ message: 'Car already listed' });
 });
 
-router.get('/:carid/', (req, res) => {
-  res.status(501).send('Not Implemented');
+router.post('/:carid/bookings', async (req, res) => {
+  const { body } = req;
+  const newID = nanoid(10);
+  const newBookingParams = {
+    TableName: 'bookings',
+    Item: {
+      booking_id: { S: newID },
+      licence_plate: { S: body.car },
+      customer: { S: body.customer },
+      start_time: { N: body.start_time },
+      end_time: { N: body.end_time },
+      cost: { N: body.cost },
+    },
+  };
+  await dbClient.send(new PutItemCommand(newBookingParams));
+  return res.status(200).json({ booking_id: newID });
 });
 
 module.exports = router;
