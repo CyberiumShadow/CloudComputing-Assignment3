@@ -97,8 +97,56 @@
   background-color: rgb(250, 250, 255);
 }
 
+/* 4. hiring car ------------------------------------------- */
 
-/* 4. hire car ------------------------------------------- */
+.hireCarImage {
+  object-fit: contain;
+  width: 100%;
+  height: 300px;
+}
+
+.hireCarImageFrame {
+  border: 1px solid gainsboro;
+  border-radius: 5px;
+}
+
+.tableTitle {
+  width: 140px;
+  color: slategrey !important;
+  
+}
+
+td {
+  padding-left: 13px !important;
+  padding-right: 13px !important;
+}
+
+.tableTopBorder {
+  color: darkslategrey !important;
+  border-top: 1px solid gainsboro !important;
+}
+
+.tableBorderless {
+  border: none !important; 
+  vertical-align: middle;
+  height: 40px;
+}
+
+.hireCard {
+  background-color: ghostwhite !important;
+}
+
+.hireCardHeader {
+  font-family: "Prompt", sans-serif;
+  font-weight: 500;
+  padding: 15px 15px !important;
+  background-color: rgb(244, 244, 251) !important;
+}
+
+.hireButton {
+  display: flex;
+  justify-content: flex-end;
+}
 
 .datePickerErrorWrapper {
   margin: 5px 0 15px 0;
@@ -108,14 +156,10 @@
   font-style: italic;
   color: orangered;
   background-color: rgba(255, 220, 220, 0.3);
-  border-radius: 14px;
+  border-radius: 10px;
   border: 1px solid rgba(255, 69, 0, 0.7);
   padding: 3px 12px;
   font-size: small;
-}
-
-.datePickerTitle {
-  width: 50px;
 }
 
 .datePickerBody {
@@ -134,57 +178,4 @@
 .datePickerBody:focus {
   outline: none;
   border: 1px solid rgb(220, 20, 60, 0.7);  
-}
-
-.selectTimeButton {
-  display: flex;
-  justify-content: flex-end;
-}
-
-/* 5. hiring car ------------------------------------------- */
-
-.hireCarImage {
-  object-fit: contain;
-  width: 100%;
-  height: 300px;
-}
-
-.hireCarImageFrame {
-  border: 1px solid gainsboro;
-  border-radius: 5px;
-}
-
-.tableTitle {
-  width: 140px;
-  color: slategrey !important;
-}
-
-td {
-  padding-left: 13px !important;
-  padding-right: 13px !important;
-}
-
-.tableTopBorder {
-  color: darkslategrey !important;
-  border-top: 1px solid gainsboro !important;
-}
-
-.tableBorderless {
-  border: none !important;
-}
-
-.hireCard {
-  background-color: ghostwhite !important;
-}
-
-.hireCardHeader {
-  font-family: "Prompt", sans-serif;
-  font-weight: 500;
-  padding: 15px 15px !important;
-  background-color: rgb(244, 244, 251) !important;
-}
-
-.hireButton {
-  display: flex;
-  justify-content: flex-end;
 }
