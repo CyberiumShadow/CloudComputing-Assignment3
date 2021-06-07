@@ -65,6 +65,8 @@ module "ecs" {
 
 module "beanstalk" {
   source = "./beanstalk"
+
+  CertArn = module.route53.acmCert
 }
 
 output "ecr_repo_url" {
