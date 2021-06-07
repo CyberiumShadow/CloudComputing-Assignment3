@@ -1,11 +1,6 @@
 const express = require('express');
 const multer = require('multer');
-const {
-  GetItemCommand,
-  PutItemCommand,
-  ScanCommand,
-  BatchGetItemCommand,
-} = require('@aws-sdk/client-dynamodb');
+const { GetItemCommand, PutItemCommand, ScanCommand } = require('@aws-sdk/client-dynamodb');
 const { PutObjectCommand } = require('@aws-sdk/client-s3');
 const { nanoid } = require('nanoid');
 const { dbClient, s3Client } = require('../lib/aws');
