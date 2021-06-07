@@ -1,9 +1,26 @@
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import NavBar from "components/utils/navBar";
 import styles from "./main.module.css";
 import Car from "components/utils/car.jpg";
 
 function HireCar() {
+  const [error, setError] = useState("");
+  const [items, setItems] = useState([]);
+
+  // useEffect(() => {
+  //   fetch("https://api.neocar.link/cars")
+  //     .then(res => res.json())
+  //     .then(
+  //       (result) => {
+  //         setItems(result.items);
+  //       },
+  //       (error) => {
+  //         setError(error);
+  //       }
+  //     )
+  // });
+
   return (
     <div>
       <NavBar currentPage={"HireCar"} />
