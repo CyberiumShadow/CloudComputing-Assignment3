@@ -38,15 +38,36 @@ resource "aws_dynamodb_table" "bookings" {
   write_capacity = 5
   read_capacity  = 5
 
-  hash_key  = "licence_plate"
-  range_key = "booking_id"
+  hash_key = "booking_id"
+  attribute {
+    name = "booking_id"
+    type = "S"
+  }
+
+  attribute {
+    name = "user_id"
+    type = "S"
+  }
+
   attribute {
     name = "licence_plate"
     type = "S"
   }
-  attribute {
-    name = "booking_id"
-    type = "S"
+
+  global_secondary_index {
+    name            = "Booking_UserID"
+    hash_key        = "user_id"
+    projection_type = "ALL"
+    write_capacity  = 5
+    read_capacity   = 5
+  }
+
+  global_secondary_index {
+    name            = "Booking_CarID"
+    hash_key        = "licence_plate"
+    projection_type = "ALL"
+    write_capacity  = 5
+    read_capacity   = 5
   }
 
   tags = {
