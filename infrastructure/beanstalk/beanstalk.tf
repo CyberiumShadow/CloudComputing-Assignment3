@@ -1,3 +1,6 @@
+variable "CertArn" {
+}
+
 resource "aws_elastic_beanstalk_application" "frontend" {
   name        = "neocar-frontend"
   description = "Neocar Frontend"
@@ -24,6 +27,24 @@ resource "aws_elastic_beanstalk_environment" "neocar" {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "IamInstanceProfile"
     value     = "aws-elasticbeanstalk-ec2-role"
+  }
+
+  setting {
+    namespace = "aws:elb:listener:443"
+    name      = "ListenerProtocol"
+    value     = "HTTPS"
+  }
+
+  setting {
+    namespace = "aws:elb:listener:443"
+    name      = "InstancePort"
+    value     = "80"
+  }
+
+  setting {
+    namespace = "aws:elb:listener:443"
+    name      = "SSLCertificateId"
+    value     = var.CertArn
   }
 }
 
