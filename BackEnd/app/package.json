@@ -14,5 +14,9 @@
     "eslint-plugin-import": "^2.23.2",
     "eslint-plugin-prettier": "^3.4.0",
     "prettier": "^2.3.0"
+  },
+  "scripts": {
+    "login": "aws ecr get-login-password | docker login --username AWS --password-stdin 860728236313.dkr.ecr.us-east-1.amazonaws.com/neocar",
+    "build": "docker buildx build --platform linux/amd64,linux/arm64 --tag 860728236313.dkr.ecr.us-east-1.amazonaws.com/neocar:buildx-latest --push ."
   }
 }
