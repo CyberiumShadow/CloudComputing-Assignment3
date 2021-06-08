@@ -18,7 +18,7 @@ const processItems = (data) => {
       ...(car.owner && { owner: car.owner.S }),
       ...(car.year && { year: car.year.N }),
       ...(car.price && { price: car.price.N }),
-      ...(car.minHour && { owner: car.minHour.N }),
+      ...(car.minHour && { minHour: car.minHour.N }),
       ...(car.address && { address: car.address.S }),
     });
   });
