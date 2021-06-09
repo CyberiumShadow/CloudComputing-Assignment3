@@ -18,7 +18,7 @@ const processItems = (data) => {
       ...(car.owner && { owner: car.owner.S }),
       ...(car.year && { year: car.year.N }),
       ...(car.price && { price: car.price.N }),
-      ...(car.minHour && { owner: car.minHour.N }),
+      ...(car.minHour && { minHour: car.minHour.N }),
       ...(car.address && { address: car.address.S }),
     });
   });
@@ -52,44 +52,54 @@ router.post('/', uploader.single('image'), async (req, res) => {
       licence_plate: { S: plate },
     },
   };
-  const { Item } = await dbClient.send(new GetItemCommand(params));
-  if (!Item) {
-    const newCarParams = {
-      TableName: 'cars',
-      Item: {
-        owner: { S: owner },
-        licence_plate: { S: plate },
-        make: { S: make },
-        model: { S: model },
-        year: { N: year },
-        price: { N: price },
-        minHour: { N: minHour },
-        address: { S: address },
-      },
-    };
-    await dbClient.send(new PutItemCommand(newCarParams));
-    await s3Client.send(new PutObjectCommand(uploadParams));
-    return res.status(200).send({ message: 'Car Listed' });
+  try {
+    const { Item } = await dbClient.send(new GetItemCommand(params));
+    if (!Item) {
+      const newCarParams = {
+        TableName: 'cars',
+        Item: {
+          owner: { S: owner },
+          licence_plate: { S: plate },
+          make: { S: make },
+          model: { S: model },
+          year: { N: year },
+          price: { N: price },
+          minHour: { N: minHour },
+          address: { S: address },
+        },
+      };
+      await dbClient.send(new PutItemCommand(newCarParams));
+      await s3Client.send(new PutObjectCommand(uploadParams));
+      return res.status(200).send({ message: 'Car Listed' });
+    }
+    return res.status(409).json({ message: 'Car already listed' });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ err });
   }
-  return res.status(409).json({ message: 'Car already listed' });
 });
 
 router.post('/:carid/bookings', async (req, res) => {
-  const { body } = req;
+  const { body, params } = req;
   const newID = nanoid(10);
   const newBookingParams = {
     TableName: 'bookings',
     Item: {
       booking_id: { S: newID },
-      licence_plate: { S: body.car },
-      customer: { S: body.customer },
-      start_time: { N: body.start_time },
-      end_time: { N: body.end_time },
-      cost: { N: body.cost },
+      licence_plate: { S: params.carid },
+      user_id: { S: body.customer },
+      start_time: { N: `${body.start_time}` },
+      end_time: { N: `${body.end_time}` },
+      cost: { N: `${body.cost}` },
     },
   };
-  await dbClient.send(new PutItemCommand(newBookingParams));
-  return res.status(200).json({ booking_id: newID });
+  try {
+    await dbClient.send(new PutItemCommand(newBookingParams));
+    return res.status(200).json({ booking_id: newID });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: err });
+  }
 });
 
 module.exports = router;
