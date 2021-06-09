@@ -4,40 +4,8 @@ import styles from "./main.module.css";
 import Car from "components/utils/car.jpg";
 
 function Dashboard() {
-  const [error, setError] = useState("");
-  const [items, setItems] = useState({
-    upcomingHired: [],
-    currentListed: [],
-  });
-
-  // useEffect(() => {
-  //   fetch("https://api.neocar.link/")
-  //     .then(res => res.json())
-  //     .then(
-  //       (result) => {
-  //         setItems({
-  //           upcomingHired: result.items
-  //         });
-  //       },
-  //       (error) => {
-  //         setError(error);
-  //       }
-  //     )
-
-  //   fetch("https://api.neocar.link/")
-  //     .then(res => res.json())
-  //     .then(
-  //       (result) => {
-  //         setItems({
-  //           currentListed: result.items
-  //         });
-  //       },
-  //       (error) => {
-  //         setError(error);
-  //       }
-  //     )
-  // });
-
+  // todo: fetch upcoming hired cars & current listed car of current login user
+  
   return (
     <div>
       <NavBar currentPage={"Dashboard"} />

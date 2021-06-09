@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import NavBar from "components/utils/navBar";
 import styles from "./main.module.css";
 import LoadingButton from "components/utils/loadingButton";
 import { useAppContext } from "libs/context";
+import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 
 function ListCar() {
   const { authentication } = useAppContext();
+  const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
   const [image, setImage] = useState();
+  const [address, setAddress] = useState();
   const [form, setForm] = useState({
+    plate: "",
     make: "",
     model: "",
     year: "",
-    plate: "",
     price: "",
     minHour: "",
-    address: "",
   });
 
   const [error, setError] = useState({
@@ -58,14 +61,7 @@ function ListCar() {
       [e.target.name]: e.target.value,
     });
   };
-
-  const handleImageChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      let img = e.target.files[0];
-      setImage(img);
-    }
-  };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isSubmissionValid()) return;
@@ -73,28 +69,35 @@ function ListCar() {
     setIsLoading(true);
 
     var formData = new FormData();
+    formData.append("image", image, image.name);
+    formData.append("owner", authentication.username);
     Object.keys(form).forEach((key) => {
       formData.append(key, form[key]);
     });
-    formData.append("owner", authentication.username);
-    formData.append("image", image);
-
-    fetch("http://localhost:3001/cars", {
+    formData.append("address", address.label);
+    
+    await fetch("https://api.neocar.link/cars", {
       method: "post",
-      body: formData,
       headers: {
-        "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${authentication.accessToken}`,
       },
+      body: formData,
     })
       .then((response) => {
-        console.log(response);
+        if (response.ok) {
+          return response.json();
+        }
+        throw response;
       })
-      .catch((response) => {
+      .then((response) => {
         console.log(response);
+        window.alert("Listing successful!");
+      })
+      .catch((err) => {
+        console.log(err);
       });
 
-    console.log(...formData);
+    // history.push("/dashboard");
     setIsLoading(false);
   };
 
@@ -229,24 +232,28 @@ function ListCar() {
               <span className={styles.inputError}>{error.minHour}</span>
             )}
           </div>
-          <div className="form-group mb-4">
+          <div className={`form-group mb-4 ${styles.flexContainer}`}>
             <label className={styles.inputTitle}>Pickup address</label>
-            <input
-              type="text"
-              className={`${styles.inputBody} ${styles.inputBodyLong}`}
-              spellCheck={false}
-              required={true}
-              name="address"
-              value={form.address}
-              onChange={handleChange}
-            />
+            <div className={`${styles.inputBodyLong}`}>
+              <GooglePlacesAutocomplete
+                selectProps={{
+                  address,
+                  onChange: setAddress,
+                }}
+                autocompletionRequest={{
+                  componentRestrictions: {
+                    country: ['au'],
+                  }
+                }}
+              />
+            </div>
           </div>
           <div className="form-group mb-4">
             <label className={styles.inputTitle}>Upload car image</label>
             <input
               type="file"
               name="image"
-              onChange={handleImageChange}
+              onChange={(e) => setImage(e.target.files[0])}
               required={true}
             />
           </div>

@@ -37,7 +37,7 @@
 }
 
 .inputBodyLong {
-  width: 400px;
+  width: 500px;
 }
 
 .inputBody::placeholder {
@@ -68,6 +68,11 @@
 
 .inputSubmit {
   margin-top: 50px;
+}
+
+.flexContainer {
+  display: flex;
+  align-items: center;
 }
 
 
@@ -113,7 +118,6 @@
 .tableTitle {
   width: 140px;
   color: slategrey !important;
-  
 }
 
 td {

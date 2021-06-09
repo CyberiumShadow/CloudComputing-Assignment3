@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
+import { useAppContext } from "libs/context";
 import NavBar from "components/utils/navBar";
 import styles from "./main.module.css";
 import LoadingButton from "components/utils/loadingButton";
@@ -14,7 +15,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faDollarSign, faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
 
 function HiringCar() {
+  const { authentication } = useAppContext();
   const history = useHistory();
+  const location = useLocation();
+  const car = location.state.data;
   const date = new Date();
   const dateFormat = "dd MMMM yyyy, h:mm aa";
   const initialDate = setHours(setMinutes(setSeconds(setMilliseconds(date, 0), 0), 0), date.getHours() + 1);
@@ -23,16 +27,12 @@ function HiringCar() {
   const [startDate, setStartDate] = useState(initialDate);
   const [endDate, setEndDate] = useState(initialDate);
   const [price, setPrice] = useState("-");
-  const [error, setError] = useState("Select date(s) to hire this car.");
-  
-  // to be replaced by real value
-  let minHour = 12; 
-  let pricePerHour = 10;
+  const [error, setError] = useState("Select dates to hire this car.");
 
   const handleStartDate = (selStartDate) => {
     setStartDate(selStartDate);
     setPrice(isDateValid(selStartDate, endDate)
-      ? getHourDiff(selStartDate, endDate) * pricePerHour
+      ? getHourDiff(selStartDate, endDate) * car.price
       : "-"
     );
   }
@@ -40,17 +40,47 @@ function HiringCar() {
   const handleEndDate = (selEndDate) => {
     setEndDate(selEndDate);
     setPrice(isDateValid(startDate, selEndDate)
-      ? getHourDiff(startDate, selEndDate) * pricePerHour
+      ? getHourDiff(startDate, selEndDate) * car.price
       : "-"
     );
   }
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isDateValid()) return;
 
     setIsLoading(true);
-    history.push("/dashboard");
+
+    let data = {
+      customer: authentication.username,
+      start_time: startDate.getTime(),
+      end_time: endDate.getTime(),
+      cost: price
+    }
+
+    await fetch(`https://api.neocar.link/cars/${car.licence_plate}/bookings`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authentication.accessToken}`,
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw response;
+      })
+      .then((response) => {
+        console.log(response);
+        window.alert("Booking successful! Your booking ID: " + response.booking_id);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    // history.push("/dashboard");
     setIsLoading(false);
   };
 
@@ -63,8 +93,8 @@ function HiringCar() {
     else if (+startDt > +endDt) {
       errorDate = "Start date must be earlier than end date.";
     }
-    else if (hourDiff < minHour) {
-      errorDate = "Minimum hour to hire this car is " + minHour + " hour(s).";
+    else if (hourDiff < car.minHour) {
+      errorDate = "Minimum hour to hire this car is " + car.minHour + " hour(s).";
     }
     if (errorDate.length > 0) {
       errorDate += " Please select date again.";
@@ -92,41 +122,41 @@ function HiringCar() {
             </div>
           </div>
           <div className="col-xl-8 col-lg-7 col-md-12 col-sm-12 col-12">
-            <h6 className={`mb-3 ${styles.formTitle}`}>Car info</h6>
+            <h6 className={`mb-4 ${styles.formTitle}`}>Car info</h6>
             <div className="table-responsive">
               <table className={`table table-sm table-hover w-auto ${styles.tableTopBorder}`}>
                 <tbody>
                   <tr>
                     <td className={styles.tableTitle}>Car owner</td>
-                    <td>g4ge</td>
+                    <td>{car.owner}</td>
                   </tr>
                   <tr>
                     <td className={styles.tableTitle}>Make</td>
-                    <td>Toyota</td>
+                    <td>{car.make}</td>
                   </tr>
                   <tr>
                     <td className={styles.tableTitle}>Model</td>
-                    <td>Corolla</td>
+                    <td>{car.model}</td>
                   </tr>
                   <tr>
                     <td className={styles.tableTitle}>Model Year</td>
-                    <td>2019</td>
+                    <td>{car.year}</td>
                   </tr>
                   <tr>
                     <td className={styles.tableTitle}>Licence plate</td>
-                    <td>ABC123</td>
+                    <td>{car.licence_plate}</td>
                   </tr>
                   <tr>
                     <td className={styles.tableTitle}>Price per hour</td>
-                    <td>$10</td>
+                    <td>${car.price}</td>
                   </tr>
                   <tr>
                     <td className={styles.tableTitle}>Minimum hour</td>
-                    <td>12</td>
+                    <td>{car.minHour}</td>
                   </tr>
                   <tr>
                     <td className={styles.tableTitle}>Pickup address</td>
-                    <td>124 La Trobe St, Melbourne VIC 3000</td>
+                    <td>{car.address}</td>
                   </tr>
                 </tbody>
               </table>
