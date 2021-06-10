@@ -22,7 +22,7 @@ resource "aws_alb_target_group" "app" {
     protocol            = "HTTP"
     matcher             = "200"
     timeout             = "3"
-    path                = "/"
+    path                = "/ping"
     unhealthy_threshold = "2"
   }
 }
