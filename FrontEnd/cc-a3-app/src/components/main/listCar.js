@@ -4,7 +4,7 @@ import NavBar from "components/utils/navBar";
 import styles from "./main.module.css";
 import LoadingButton from "components/utils/loadingButton";
 import { useAppContext } from "libs/context";
-import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 
 function ListCar() {
   const { authentication } = useAppContext();
@@ -61,7 +61,7 @@ function ListCar() {
       [e.target.name]: e.target.value,
     });
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isSubmissionValid()) return;
@@ -75,7 +75,7 @@ function ListCar() {
       formData.append(key, form[key]);
     });
     formData.append("address", address.label);
-    
+
     await fetch("https://api.neocar.link/cars", {
       method: "post",
       headers: {
@@ -242,8 +242,8 @@ function ListCar() {
                 }}
                 autocompletionRequest={{
                   componentRestrictions: {
-                    country: ['au'],
-                  }
+                    country: ["au"],
+                  },
                 }}
               />
             </div>
