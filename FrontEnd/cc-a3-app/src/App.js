@@ -13,7 +13,8 @@ import UnauthenticatedRoute from "components/auth/unauthenticatedRoute";
 
 // Main components
 import Dashboard from "components/main/dashboard";
-import Profile from "components/main/profile";
+import Booking from "components/main/booking";
+import Listing from "components/main/listing";
 import HireCar from "components/main/hireCar";
 import HiringCar from "components/main/hiringCar";
 import ListCar from "components/main/listCar";
@@ -61,8 +62,11 @@ function App() {
           <AuthenticatedRoute exact path="/dashboard">
             <Dashboard />
           </AuthenticatedRoute>
-          <AuthenticatedRoute exact path="/profile">
-            <Profile />
+          <AuthenticatedRoute exact path="/dashboard/booking/:carPlate">
+            <Booking />
+          </AuthenticatedRoute>
+          <AuthenticatedRoute exact path="/dashboard/listing/:carPlate">
+            <Listing />
           </AuthenticatedRoute>
           <AuthenticatedRoute exact path="/hire-car">
             <HireCar />
