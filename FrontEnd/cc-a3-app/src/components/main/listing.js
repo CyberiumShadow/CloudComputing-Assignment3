@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
+import { useAppContext } from "libs/context";
 import NavBar from "components/utils/navBar";
 import styles from "./main.module.css";
 import LoadingButton from "components/utils/loadingButton";
-import { useAppContext } from "libs/context";
+import LoadingButtonOutline from "components/utils/loadingButtonOutline";
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 
-function ListCar() {
+function Listing() {
   const { authentication } = useAppContext();
   const history = useHistory();
+  const location = useLocation();
+
   const [isLoading, setIsLoading] = useState(false);
   const [image, setImage] = useState();
   const [address, setAddress] = useState();
@@ -68,34 +71,34 @@ function ListCar() {
 
     setIsLoading(true);
 
-    var formData = new FormData();
-    formData.append("image", image, image.name);
-    formData.append("owner", authentication.username);
-    Object.keys(form).forEach((key) => {
-      formData.append(key, form[key]);
-    });
-    formData.append("address", address.label);
+    // var formData = new FormData();
+    // formData.append("image", image, image.name);
+    // formData.append("owner", authentication.username);
+    // Object.keys(form).forEach((key) => {
+    //   formData.append(key, form[key]);
+    // });
+    // formData.append("address", address.label);
     
-    await fetch("https://api.neocar.link/cars", {
-      method: "post",
-      headers: {
-        Authorization: `Bearer ${authentication.accessToken}`,
-      },
-      body: formData,
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw response;
-      })
-      .then((response) => {
-        console.log(response);
-        window.alert("Listing successful!");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // await fetch("https://api.neocar.link/cars", {
+    //   method: "post",
+    //   headers: {
+    //     Authorization: `Bearer ${authentication.accessToken}`,
+    //   },
+    //   body: formData,
+    // })
+    //   .then((response) => {
+    //     if (response.ok) {
+    //       return response.json();
+    //     }
+    //     throw response;
+    //   })
+    //   .then((response) => {
+    //     console.log(response);
+    //     window.alert("Listing successful!");
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
 
     // history.push("/dashboard");
     setIsLoading(false);
@@ -122,6 +125,7 @@ function ListCar() {
       price: errorPrice,
       minHour: errorMinHour,
     });
+
     return (
       errorYear.length === 0 &&
       errorPlate.length === 0 &&
@@ -130,24 +134,57 @@ function ListCar() {
     );
   };
 
+  const handleCancel = async (e) => {
+    e.preventDefault();
+
+    setIsLoading(true);    
+
+    // await fetch(`https://api.neocar.link/`, {
+    //   method: "post",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: `Bearer ${authentication.accessToken}`,
+    //   },
+    // })
+    //   .then((response) => {
+    //     if (response.ok) {
+    //       return response.json();
+    //     }
+    //     throw response;
+    //   })
+    //   .then((response) => {
+    //     console.log(response);
+    //     window.alert("Listing cancelled successfully!");
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+
+    // history.push("/dashboard");
+    setIsLoading(false);
+  };
+
   return (
     <div>
-      <NavBar currentPage={"ListCar"} />
+      <NavBar currentPage={"Dashboard"} />
       <div className={styles.contentWrapper}>
-        <h3 className={styles.pageTitle}>List car</h3>
-        <hr />
+        <Link className="link" to={"/dashboard"}>
+          {"<"} back
+        </Link> 
+        <br />
+        <br />
+
         <form onSubmit={handleSubmit}>
           <div className="form-group mb-4">
-            <h6 className={styles.formTitle}>
-              Please fill in your car listing information
-            </h6>
+            <h5 className={styles.formTitle}>
+              Edit your current car listing
+            </h5>
           </div>
           <div className="form-group mb-3">
             <label className={styles.inputTitle}>Make</label>
             <input
               type="text"
               className={styles.inputBody}
-              placeholder="e.g. Toyota"
               spellCheck={false}
               required={true}
               name="make"
@@ -160,7 +197,6 @@ function ListCar() {
             <input
               type="text"
               className={styles.inputBody}
-              placeholder="e.g. Corolla"
               spellCheck={false}
               required={true}
               name="model"
@@ -173,7 +209,6 @@ function ListCar() {
             <input
               type="text"
               className={styles.inputBody}
-              placeholder="2000 - 2021"
               spellCheck={false}
               required={true}
               name="year"
@@ -189,7 +224,6 @@ function ListCar() {
             <input
               type="text"
               className={styles.inputBody}
-              placeholder="ABC123"
               spellCheck={false}
               required={true}
               name="plate"
@@ -205,7 +239,6 @@ function ListCar() {
             <input
               type="text"
               className={styles.inputBody}
-              placeholder="e.g. 20"
               spellCheck={false}
               required={true}
               name="price"
@@ -221,7 +254,6 @@ function ListCar() {
             <input
               type="text"
               className={styles.inputBody}
-              placeholder="1 - 48"
               spellCheck={false}
               required={true}
               name="minHour"
@@ -260,7 +292,7 @@ function ListCar() {
           <div className={`form-group ${styles.inputSubmit}`}>
             <LoadingButton
               isLoading={isLoading}
-              text={"Submit listing"}
+              text={"Edit listing"}
               loadingText={"Submitting"}
               disabled={
                 error.year.length > 0 ||
@@ -271,9 +303,19 @@ function ListCar() {
             />
           </div>
         </form>
+
+        <form onSubmit={handleCancel} className="mt-3">
+          <div>
+            <LoadingButtonOutline
+              isLoading={isLoading}
+              text={"Cancel listing"}
+              loadingtText={"Cancelling"}
+            />
+          </div>
+        </form>
       </div>
     </div>
   );
 }
 
-export default ListCar;
+export default Listing;

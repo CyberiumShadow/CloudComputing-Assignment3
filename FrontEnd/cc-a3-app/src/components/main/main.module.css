@@ -15,6 +15,11 @@
   font-weight: 500;
 }
 
+.subTitle {
+  font-size: small;
+  color: lightslategrey;
+}
+
 
 /* 2. input form ------------------------------------------- */
 
@@ -102,6 +107,7 @@
   background-color: rgb(250, 250, 255);
 }
 
+
 /* 4. hiring car ------------------------------------------- */
 
 .hireCarImage {
@@ -113,27 +119,6 @@
 .hireCarImageFrame {
   border: 1px solid gainsboro;
   border-radius: 5px;
-}
-
-.tableTitle {
-  width: 140px;
-  color: slategrey !important;
-}
-
-td {
-  padding-left: 13px !important;
-  padding-right: 13px !important;
-}
-
-.tableTopBorder {
-  color: darkslategrey !important;
-  border-top: 1px solid gainsboro !important;
-}
-
-.tableBorderless {
-  border: none !important; 
-  vertical-align: middle;
-  height: 40px;
 }
 
 .hireCard {
@@ -151,6 +136,8 @@ td {
   display: flex;
   justify-content: flex-end;
 }
+
+/* 5. date picker  ------------------------------------------- */
 
 .datePickerErrorWrapper {
   margin: 5px 0 15px 0;
@@ -182,4 +169,68 @@ td {
 .datePickerBody:focus {
   outline: none;
   border: 1px solid rgb(220, 20, 60, 0.7);  
+}
+
+
+/* 6. table  ------------------------------------------- */
+
+.tableTitle {
+  width: 140px;
+  color: slategrey !important;
+}
+
+td, th {
+  padding-left: 13px !important;
+  padding-right: 13px !important;
+}
+
+thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: rgb(255, 175, 161); 
+}
+
+.tableTopBorder {
+  color: darkslategrey !important;
+  border-top: 1px solid gainsboro !important;
+}
+
+.tableBorderless {
+  border: none !important; 
+  vertical-align: middle;
+  height: 40px;
+}
+
+.tableScrollable {
+  height: 220px;
+  overflow: auto;
+}
+
+.tableCustom {
+  color: darkslategrey !important;
+}
+
+.th1 { 
+  width: 15%;
+}
+
+.th2 { 
+  width: 20%;
+}
+
+.th3 { 
+  width: 15%;
+}
+
+.th4 { 
+  width: 10%;
+}
+
+.th5 { 
+  width: 20%;
+}
+
+.th6 { 
+  width: 20%;
 }

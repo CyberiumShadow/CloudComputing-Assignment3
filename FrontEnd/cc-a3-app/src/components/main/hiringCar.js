@@ -122,7 +122,7 @@ function HiringCar() {
             </div>
           </div>
           <div className="col-xl-8 col-lg-7 col-md-12 col-sm-12 col-12">
-            <h6 className={`mb-4 ${styles.formTitle}`}>Car info</h6>
+            <h6 className={`mb-3 ${styles.formTitle}`}>Car info</h6>
             <div className="table-responsive">
               <table className={`table table-sm table-hover w-auto ${styles.tableTopBorder}`}>
                 <tbody>
@@ -234,6 +234,7 @@ function HiringCar() {
                     <LoadingButton
                       isLoading={isLoading}
                       text={"Hire"}
+                      loadingText={"Hiring"}
                       disabled={error.length > 0}
                     />
                   </div>
