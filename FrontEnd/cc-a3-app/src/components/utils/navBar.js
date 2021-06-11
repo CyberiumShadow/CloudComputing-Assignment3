@@ -35,11 +35,6 @@ function NavBar(props) {
           </Link>
         </li>
         <li>
-          <Link className={`nav-sidebar-list ${props.currentPage === "Profile" ? "nav-sidebar-current" : ""}`} to={"/profile"}>
-            <FontAwesomeIcon icon={faUser} fixedWidth /> Profile
-          </Link>
-        </li>
-        <li>
           <Link className={`nav-sidebar-list ${props.currentPage === "HireCar" ? "nav-sidebar-current" : ""}`} to={"/hire-car"}>
             <FontAwesomeIcon icon={faCar} fixedWidth /> Hire car
           </Link>

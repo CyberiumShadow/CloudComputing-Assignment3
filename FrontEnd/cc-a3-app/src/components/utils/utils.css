@@ -151,3 +151,30 @@
   opacity: 0.6;
   pointer-events: none;
 }
+
+
+/* 4. loading button outline ------------------------------------- */
+
+.loading-btn-outline {
+  background-color: rgba(255, 255, 255, 0);
+  color: tomato;
+  border: 1px solid tomato;
+  border-radius: 14px;
+  width: 200px;
+  height: 40px;
+}
+
+.loading-btn-outline:hover {
+  background-color: ghostwhite;
+}
+
+.loading-btn-outline:focus {
+  outline: none;
+  border: 1px solid crimson;
+  border-radius: 14px;
+}
+
+.loading-btn-outline:active {
+  border: none;
+  background-color: ghostwhite;
+}
