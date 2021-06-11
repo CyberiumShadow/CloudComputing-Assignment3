@@ -94,6 +94,7 @@ function SignUp() {
             <LoadingButton 
               isLoading={isLoading} 
               text={"Create account"} 
+              loadingText={"Creating account"} 
               disabled={false}
             />
           </div>

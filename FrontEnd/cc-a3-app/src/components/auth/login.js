@@ -92,6 +92,7 @@ function Login() {
             <LoadingButton
               isLoading={isLoading}
               text={"Login"}
+              loadingText={"Logging in"}
               disabled={false}
             />
           </div>
