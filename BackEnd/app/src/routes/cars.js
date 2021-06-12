@@ -18,7 +18,7 @@ const uploader = multer();
 
 const processItems = (data) => {
   const processedData = [];
-  data.map((car) => {
+  data.map((car) =>
     processedData.push({
       licence_plate: car.licence_plate.S,
       ...(car.make && { make: car.make.S }),
@@ -28,8 +28,8 @@ const processItems = (data) => {
       ...(car.price && { price: car.price.N }),
       ...(car.minHour && { minHour: car.minHour.N }),
       ...(car.address && { address: car.address.S }),
-    });
-  });
+    })
+  );
   return processedData;
 };
 
@@ -111,7 +111,6 @@ router.patch('/:carid', async (req, res) => {
   };
   try {
     const { Item } = await dbClient.send(new GetItemCommand(params));
-    console.log(Item);
     if (Item) {
       const patchCarParams = {
         TableName: 'cars',
@@ -153,11 +152,14 @@ router.delete('/:carid', async (req, res) => {
   const queryBookingParams = {
     TableName: 'bookings',
     KeyConditionExpression: '#carid = :carid',
+    FilterExpression: '#status = :status',
     ExpressionAttributeNames: {
       '#carid': 'licence_plate',
+      '#status': 'status',
     },
     ExpressionAttributeValues: {
       ':carid': { S: carid },
+      ':status': { S: 'Booked' },
     },
   };
   try {
@@ -208,7 +210,7 @@ router.post('/:carid/bookings', async (req, res) => {
     const isNewSlotValid = (newSlot) => {
       let isValid = true;
 
-      for (let i = 0; i < bookings.length; i++) {
+      for (let i = 0; i < bookings.length; i += 1) {
         if (
           bookings[i].start_time.N <= newSlot.end_time &&
           bookings[i].end_time.N >= newSlot.start_time
