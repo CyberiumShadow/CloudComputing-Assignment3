@@ -3,7 +3,9 @@ resource "aws_ecs_service" "neocar_ecs_service" {
   cluster         = aws_ecs_cluster.neocar_ecs_cluster.id
   task_definition = aws_ecs_task_definition.api.arn
   desired_count   = 1
-  launch_type     = "FARGATE"
+
+  launch_type          = "FARGATE"
+  force_new_deployment = true
 
   network_configuration {
     security_groups  = [aws_security_group.ecs_tasks.id]

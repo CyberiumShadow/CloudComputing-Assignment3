@@ -2,6 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const carRouter = require('./routes/cars');
+const userRouter = require('./routes/users');
 
 const app = express();
 const port = 3000;
@@ -9,6 +10,7 @@ const port = 3000;
 app.use(cors());
 app.use(express.json());
 app.use('/cars', carRouter);
+app.use('/users', userRouter);
 
 app.get('/ping', (req, res) => res.status(200).send('Health Check Ping!'));
 

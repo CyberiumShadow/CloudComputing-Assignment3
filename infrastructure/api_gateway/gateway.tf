@@ -25,8 +25,10 @@ resource "aws_apigatewayv2_api" "neocar_api" {
 
   disable_execute_api_endpoint = true
   cors_configuration {
-    allow_credentials = true
-    allow_origins     = ["https://neocar.link"]
+    allow_credentials = false
+    allow_origins     = ["*"]
+    allow_headers     = ["*", "authorization", "content-type"]
+    allow_methods     = ["DELETE", "GET", "OPTIONS", "PATCH", "POST", "PUT"]
   }
 }
 

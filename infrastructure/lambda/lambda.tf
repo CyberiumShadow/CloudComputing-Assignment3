@@ -35,13 +35,13 @@ resource "aws_iam_role" "iam_for_lambda" {
             "dynamodb:PutItem",
             "dynamodb:UpdateItem"
           ],
-          "Resource" : "arn:aws:dynamodb:*:*:table/neocar_users"
+          "Resource" : "arn:aws:dynamodb:*:*:table/users"
         },
         {
           "Sid" : "GetStreamRecords",
           "Effect" : "Allow",
           "Action" : "dynamodb:GetRecords",
-          "Resource" : "arn:aws:dynamodb:*:*:table/neocar_users/stream/* "
+          "Resource" : "arn:aws:dynamodb:*:*:table/users/stream/* "
         },
         {
           "Sid" : "WriteLogStreamsAndGroups",
