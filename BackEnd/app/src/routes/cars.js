@@ -209,8 +209,8 @@ router.post('/:carid/bookings', async (req, res) => {
     for (let i = 0; i < Items.length; i += 1) {
       const start = Items[i].start_time.N;
       const end = Items[i].end_time.N;
-      const bookingStart = 1623513601000;
-      const bookingEnd = 1623517199000;
+      const bookingStart = body.start_time;
+      const bookingEnd = body.end_time;
       console.log(`Prev End: ${prevEnd}`);
       console.log(`Start: ${start}`);
       console.log(`End: ${end}`);
