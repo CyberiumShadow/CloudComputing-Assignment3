@@ -51,6 +51,9 @@ module "lambda" {
   source = "./lambda"
 
   cognitoArn = module.cognito.cognitoArn
+  depends_on = [
+    module.s3
+  ]
 }
 
 module "ecr" {
