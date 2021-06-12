@@ -210,8 +210,8 @@ router.post('/:carid/bookings', async (req, res) => {
 
       for (let i = 0; i < bookings.length; i++) {
         if (
-          bookings[i].end_time.N > newSlot.start_time &&
-          bookings[i].end_time.N <= newSlot.end_time
+          bookings[i].start_time.N <= newSlot.end_time &&
+          bookings[i].end_time.N >= newSlot.start_time
         ) {
           isValid = false;
         }
