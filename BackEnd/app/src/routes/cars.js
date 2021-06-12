@@ -189,6 +189,48 @@ router.delete('/:carid', async (req, res) => {
 router.post('/:carid/bookings', async (req, res) => {
   const { body, params } = req;
   const newID = nanoid(10);
+  const queryBookingParams = {
+    TableName: 'bookings',
+    KeyConditionExpression: '#carid = :carid',
+    FilterExpression: '#status = :status',
+    ExpressionAttributeNames: {
+      '#carid': 'licence_plate',
+      '#status': 'status',
+    },
+    ExpressionAttributeValues: {
+      ':carid': { S: params.carid },
+      ':status': { S: 'Booked' },
+    },
+  };
+  try {
+    const { Items } = await dbClient.send(new QueryCommand(queryBookingParams));
+    let prevEnd = null;
+    let possible = false;
+    for (let i = 0; i < Items.length; i += 1) {
+      const start = Items[i].start_time.N;
+      const end = Items[i].end_time.N;
+      const bookingStart = 1623513601000;
+      const bookingEnd = 1623517199000;
+      console.log(`Prev End: ${prevEnd}`);
+      console.log(`Start: ${start}`);
+      console.log(`End: ${end}`);
+      console.log(`Booking Start: ${bookingStart}`);
+      console.log(`Booking End: ${bookingEnd}`);
+      console.log(`Booking Start > End: ${bookingStart > prevEnd}`);
+      console.log(`Booking End < Start: ${bookingEnd < start}`);
+      if (bookingStart > prevEnd && bookingEnd < start) {
+        possible = true;
+        break;
+      }
+      prevEnd = end;
+    }
+    if (!possible) {
+      return res.status(409).json({ message: 'Booking Times conflict with existing bookings' });
+    }
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json(err);
+  }
   const newBookingParams = {
     TableName: 'bookings',
     Item: {
