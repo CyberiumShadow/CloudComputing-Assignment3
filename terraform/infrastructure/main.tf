@@ -7,6 +7,18 @@ terraform {
   }
 }
 
+data "terraform_remote_state" "env" {
+  backend = "remote"
+
+  config = {
+    organization = "s3720461-cc-a3"
+
+    workspaces = {
+      name = "Assignment3_Environment"
+    }
+  }
+}
+
 module "cognito" {
   source             = "./cognito"
   CertArn            = module.route53.acmCert
@@ -26,14 +38,16 @@ module "route53" {
   ebs_url        = module.beanstalk.env_url
 }
 
-module "dynamodb" {
-  source = "./dynamodb"
-}
-
 module "s3" {
   source = "./s3"
 
   CertArn = module.route53.acmCert
+}
+
+module "ecs" {
+  source = "./ecs"
+
+  ecr_repo_url = data.terraform_remote_state.env.outputs.ecr_repo_url
 }
 
 module "api" {
@@ -51,27 +65,10 @@ module "lambda" {
   source = "./lambda"
 
   cognitoArn = module.cognito.cognitoArn
-  depends_on = [
-    module.s3
-  ]
-}
-
-module "ecr" {
-  source = "./ecr"
-}
-
-module "ecs" {
-  source = "./ecs"
-
-  ecr_repo = module.ecr.ecr_repo_url
 }
 
 module "beanstalk" {
   source = "./beanstalk"
 
   CertArn = module.route53.acmCert
-}
-
-output "ecr_repo_url" {
-  value = module.ecr.ecr_repo_url
 }

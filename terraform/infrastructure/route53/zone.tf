@@ -20,14 +20,14 @@ variable "ebs_url" {
 
 }
 
-resource "aws_route53_zone" "main" {
+data "aws_route53_zone" "main" {
   name = "neocar.link"
 }
 
 resource "aws_route53_record" "cdn" {
   name    = "cdn.neocar.link"
   type    = "A"
-  zone_id = aws_route53_zone.main.zone_id
+  zone_id = data.aws_route53_zone.main.zone_id
   alias {
     evaluate_target_health = false
     name                   = var.CFDistribution
@@ -39,7 +39,7 @@ resource "aws_route53_record" "cdn" {
 resource "aws_route53_record" "frontend" {
   name    = "neocar.link"
   type    = "A"
-  zone_id = aws_route53_zone.main.zone_id
+  zone_id = data.aws_route53_zone.main.zone_id
   alias {
     evaluate_target_health = false
     name                   = var.ebs_url
@@ -50,7 +50,7 @@ resource "aws_route53_record" "frontend" {
 resource "aws_route53_record" "auth-cognito-A" {
   name    = var.PoolDomain
   type    = "A"
-  zone_id = aws_route53_zone.main.zone_id
+  zone_id = data.aws_route53_zone.main.zone_id
   alias {
     evaluate_target_health = false
     name                   = var.PoolDomainCF
@@ -62,7 +62,7 @@ resource "aws_route53_record" "auth-cognito-A" {
 resource "aws_route53_record" "api" {
   name    = var.APIDomain
   type    = "A"
-  zone_id = aws_route53_zone.main.zone_id
+  zone_id = data.aws_route53_zone.main.zone_id
 
   alias {
     name                   = var.APITarget
@@ -85,5 +85,5 @@ resource "aws_route53_record" "acm" {
   records         = [each.value.record]
   ttl             = 60
   type            = each.value.type
-  zone_id         = aws_route53_zone.main.zone_id
+  zone_id         = data.aws_route53_zone.main.zone_id
 }

@@ -1,9 +1,10 @@
 terraform {
-  backend "remote" {
+  /* backend "remote" {
     organization = "s3720461-cc-a3"
 
     workspaces {
-      name = "Assignment-3"
+      name = "Assignment3_Infrastructure"
     }
   }
+  */
 }

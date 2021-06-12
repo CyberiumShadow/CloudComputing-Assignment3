@@ -1,9 +1,14 @@
-variable "ecr_repo" {
+variable "ecr_repo_url" {
+}
+
+data "aws_ecr_image" "api_image" {
+  repository_name = "neocar"
+  image_tag       = "buildx-latest"
 }
 
 resource "aws_ecs_task_definition" "api" {
   family             = "neocar-api"
-  execution_role_arn = "arn:aws:iam::860728236313:role/ecsTaskExecutionRole"
+  execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
   task_role_arn      = aws_iam_role.iam_for_ecs.arn
 
   requires_compatibilities = ["FARGATE"]
@@ -13,7 +18,7 @@ resource "aws_ecs_task_definition" "api" {
   container_definitions = jsonencode([
     {
       name      = "neocar-api"
-      image     = "${var.ecr_repo}:buildx-latest"
+      image     = "${var.ecr_repo_url}:buildx-latest@${data.aws_ecr_image.api_image.image_digest}"
       cpu       = 256
       memory    = 512
       essential = true
@@ -33,6 +38,10 @@ resource "aws_ecs_task_definition" "api" {
       ]
     }
   ])
+
+  depends_on = [
+    data.aws_ecr_image.api_image
+  ]
 }
 
 resource "aws_iam_role" "iam_for_ecs" {
