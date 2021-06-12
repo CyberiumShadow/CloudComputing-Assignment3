@@ -9,7 +9,6 @@ import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
 
 function HireCar() {
   const { authentication } = useAppContext();
-  const [error, setError] = useState("");
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -30,7 +29,6 @@ function HireCar() {
         setData(data)
       })
       .catch((err) => {
-        setError(err);
         console.log(err);
       });
   }, []);

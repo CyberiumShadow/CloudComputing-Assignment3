@@ -13,6 +13,7 @@ import setSeconds from "date-fns/setSeconds";
 import setMilliseconds from "date-fns/setMilliseconds";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faDollarSign, faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
+import { ConsoleLogger } from "@aws-amplify/core";
 
 function HiringCar() {
   const { authentication } = useAppContext();
@@ -28,7 +29,7 @@ function HiringCar() {
   const [endDate, setEndDate] = useState(initialDate);
   const [price, setPrice] = useState("-");
   const [error, setError] = useState("Select dates to hire this car.");
-
+  
   const handleStartDate = (selStartDate) => {
     setStartDate(selStartDate);
     setPrice(isDateValid(selStartDate, endDate)
@@ -75,12 +76,13 @@ function HiringCar() {
       .then((response) => {
         console.log(response);
         window.alert("Booking successful! Your booking ID: " + response.booking_id);
+        history.push("/dashboard");
       })
       .catch((err) => {
         console.log(err);
+        window.alert("Booking unsuccessful! Please try again.");
       });
 
-    // history.push("/dashboard");
     setIsLoading(false);
   };
 

@@ -6,44 +6,34 @@ import styles from "./main.module.css";
 import LoadingButton from "components/utils/loadingButton";
 import LoadingButtonOutline from "components/utils/loadingButtonOutline";
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+import { ConsoleLogger } from "@aws-amplify/core";
 
 function Listing() {
   const { authentication } = useAppContext();
   const history = useHistory();
   const location = useLocation();
+  const car = location.state.data;
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [image, setImage] = useState();
-  const [address, setAddress] = useState();
+  const [isEditLoading, setIsEditLoading] = useState(false);
+  const [isCancelLoading, setIsCancelLoading] = useState(false);
+  const [address, setAddress] = useState({
+    label: `${car.address}`,
+  });
   const [form, setForm] = useState({
-    plate: "",
-    make: "",
-    model: "",
-    year: "",
-    price: "",
-    minHour: "",
+    price: `${car.price}`,
+    minHour: `${car.minHour}`,
   });
 
   const [error, setError] = useState({
-    year: "",
-    plate: "",
     price: "",
     minHour: "",
+    address: "",
   });
 
   useEffect(() => {
     // validate form
     const numbers = /^[0-9]+$/;
-    const plate = /^[A-Z0-9]+$/;
     setError({
-      year:
-        form.year.length > 0 && !form.year.match(numbers)
-          ? "Model year must be numeric"
-          : "",
-      plate:
-        form.plate.length > 0 && !form.plate.match(plate)
-          ? "License plate must contain only letters/numbers"
-          : "",
       price:
         form.price.length > 0 && !form.price.match(numbers)
           ? "List price must be numeric"
@@ -52,116 +42,109 @@ function Listing() {
         form.minHour.length > 0 && !form.minHour.match(numbers)
           ? "Minimum hour must be numeric"
           : "",
+      address: "",
     });
   }, [form]);
 
   const handleChange = (e) => {
-    if (e.target.name === "plate")
-      e.target.value = e.target.value.toUpperCase();
-
     setForm({
       ...form,
       [e.target.name]: e.target.value,
     });
   };
   
-  const handleSubmit = async (e) => {
+  const handleEdit = async (e) => {
     e.preventDefault();
     if (!isSubmissionValid()) return;
 
-    setIsLoading(true);
+    setIsEditLoading(true);
 
-    // var formData = new FormData();
-    // formData.append("image", image, image.name);
-    // formData.append("owner", authentication.username);
-    // Object.keys(form).forEach((key) => {
-    //   formData.append(key, form[key]);
-    // });
-    // formData.append("address", address.label);
+    let data = {
+      price: form.price,
+      minHour: form.minHour,
+      address: address.label
+    }
     
-    // await fetch("https://api.neocar.link/cars", {
-    //   method: "post",
-    //   headers: {
-    //     Authorization: `Bearer ${authentication.accessToken}`,
-    //   },
-    //   body: formData,
-    // })
-    //   .then((response) => {
-    //     if (response.ok) {
-    //       return response.json();
-    //     }
-    //     throw response;
-    //   })
-    //   .then((response) => {
-    //     console.log(response);
-    //     window.alert("Listing successful!");
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-
-    // history.push("/dashboard");
-    setIsLoading(false);
-  };
-
-  const isSubmissionValid = () => {
-    var errorYear =
-      parseInt(form.year) < 2000 || parseInt(form.year) > 2021
-        ? "Model year must be between 2000 and 2021"
-        : "";
-    var errorPlate =
-      form.plate.length < 2 || form.plate.length > 6
-        ? "Licence plate must be between 2 to 6 letters/numbers"
-        : "";
-    var errorPrice =
-      parseInt(form.price) === 0 ? "List price must be more than zero" : "";
-    var errorMinHour =
-      parseInt(form.minHour) < 1 || parseInt(form.minHour) > 48
-        ? "Minimum hour must be between 1 and 48"
-        : "";
-    setError({
-      year: errorYear,
-      plate: errorPlate,
-      price: errorPrice,
-      minHour: errorMinHour,
-    });
-
-    return (
-      errorYear.length === 0 &&
-      errorPlate.length === 0 &&
-      errorPrice.length === 0 &&
-      errorMinHour.length === 0
-    );
+    await fetch(`https://api.neocar.link/cars/${car.licence_plate}`, {
+      method: "patch",
+      headers: {
+        Authorization: `Bearer ${authentication.accessToken}`,
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw response;
+      })
+      .then((response) => {
+        console.log(response);
+        window.alert("Listing is edited!");
+        history.push("/dashboard");
+      })
+      .catch((err) => {
+        window.alert("Listing cannot be edited! Please try again.");
+        console.log(err);
+      });
+    
+    setIsEditLoading(false);
   };
 
   const handleCancel = async (e) => {
     e.preventDefault();
+    setIsCancelLoading(true);
+    
+    await fetch(`https://api.neocar.link/cars/${car.licence_plate}`, {
+      method: "delete",
+      headers: {
+        Authorization: `Bearer ${authentication.accessToken}`,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw response;
+      })
+      .then((response) => {
+        console.log(response);
+        window.alert("Listing is cancelled!");
+        history.push("/dashboard");
+      })
+      .catch((err) => {
+        window.alert("Listing cannot be cancelled! Please try again.");
+        console.log(err);
+      });
+    
+    setIsCancelLoading(false);
+  };
 
-    setIsLoading(true);    
+  const isSubmissionValid = () => {
+    var errorPrice =
+      parseInt(form.price) === 0 
+        ? "List price must be more than zero" 
+        : "";
+    var errorMinHour =
+      parseInt(form.minHour) < 1 || parseInt(form.minHour) > 48
+        ? "Minimum hour must be between 1 and 48"
+        : "";
+    var errorAddress = 
+      address === null
+        ? "Pickup address is required"
+        : "";
 
-    // await fetch(`https://api.neocar.link/`, {
-    //   method: "post",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: `Bearer ${authentication.accessToken}`,
-    //   },
-    // })
-    //   .then((response) => {
-    //     if (response.ok) {
-    //       return response.json();
-    //     }
-    //     throw response;
-    //   })
-    //   .then((response) => {
-    //     console.log(response);
-    //     window.alert("Listing cancelled successfully!");
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    setError({
+      price: errorPrice,
+      minHour: errorMinHour,
+      address: errorAddress,
+    });
 
-    // history.push("/dashboard");
-    setIsLoading(false);
+    return (
+      errorPrice.length === 0 &&
+      errorMinHour.length === 0 &&
+      errorAddress.length === 0
+    );
   };
 
   return (
@@ -174,131 +157,113 @@ function Listing() {
         <br />
         <br />
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group mb-4">
-            <h5 className={styles.formTitle}>
-              Edit your current car listing
-            </h5>
-          </div>
-          <div className="form-group mb-3">
-            <label className={styles.inputTitle}>Make</label>
-            <input
-              type="text"
-              className={styles.inputBody}
-              spellCheck={false}
-              required={true}
-              name="make"
-              value={form.make}
-              onChange={handleChange}
+        <div className="form-group mb-4">
+          <h5 className={styles.formTitle}>
+            Edit your current car listing
+          </h5>
+        </div>
+        <div className="form-group mb-3">
+          <label className={styles.inputTitle}>Make</label>
+          <input
+            type="text"
+            className={styles.inputBody}
+            name="make"
+            value={car.make}
+            disabled={true}
+          />
+        </div>
+        <div className="form-group mb-3">
+          <label className={styles.inputTitle}>Model</label>
+          <input
+            type="text"
+            className={styles.inputBody}
+            name="model"
+            value={car.model}
+            disabled={true}
+          />
+        </div>
+        <div className="form-group mb-3">
+          <label className={styles.inputTitle}>Model year</label>
+          <input
+            type="text"
+            className={styles.inputBody}
+            name="year"
+            value={car.year}
+            disabled={true}
+          />
+        </div>
+        <div className="form-group mb-3">
+          <label className={styles.inputTitle}>Licence plate</label>
+          <input
+            type="text"
+            className={styles.inputBody}
+            name="plate"
+            value={car.licence_plate}
+            disabled={true}
+          />
+        </div>
+        <div className="form-group mb-3">
+          <label className={styles.inputTitle}>List price per hour</label>
+          <input
+            type="text"
+            className={styles.inputBody}
+            spellCheck={false}
+            required={true}
+            name="price"
+            placeholder="e.g. 20"
+            value={form.price}
+            onChange={handleChange}
+          />
+          {error.price.length > 0 && (
+            <span className={styles.inputError}>{error.price}</span>
+          )}
+        </div>
+        <div className="form-group mb-3">
+          <label className={styles.inputTitle}>Minimum hour</label>
+          <input
+            type="text"
+            className={styles.inputBody}
+            spellCheck={false}
+            required={true}
+            placeholder="1 - 48"
+            name="minHour"
+            value={form.minHour}
+            onChange={handleChange}
+          />
+          {error.minHour.length > 0 && (
+            <span className={styles.inputError}>{error.minHour}</span>
+          )}
+        </div>
+        <div className={`form-group mb-4 ${styles.flexContainer}`}>
+          <label className={styles.inputTitle}>Pickup address</label>
+          <div className={`${styles.inputBodyLong}`}>
+            <GooglePlacesAutocomplete
+              selectProps={{
+                address,
+                onChange: setAddress,
+              }}
+              autocompletionRequest={{
+                componentRestrictions: {
+                  country: ['au'],
+                }
+              }}
             />
           </div>
-          <div className="form-group mb-3">
-            <label className={styles.inputTitle}>Model</label>
-            <input
-              type="text"
-              className={styles.inputBody}
-              spellCheck={false}
-              required={true}
-              name="model"
-              value={form.model}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group mb-3">
-            <label className={styles.inputTitle}>Model year</label>
-            <input
-              type="text"
-              className={styles.inputBody}
-              spellCheck={false}
-              required={true}
-              name="year"
-              value={form.year}
-              onChange={handleChange}
-            />
-            {error.year.length > 0 && (
-              <span className={styles.inputError}>{error.year}</span>
-            )}
-          </div>
-          <div className="form-group mb-3">
-            <label className={styles.inputTitle}>Licence plate</label>
-            <input
-              type="text"
-              className={styles.inputBody}
-              spellCheck={false}
-              required={true}
-              name="plate"
-              value={form.plate}
-              onChange={handleChange}
-            />
-            {error.plate.length > 0 && (
-              <span className={styles.inputError}>{error.plate}</span>
-            )}
-          </div>
-          <div className="form-group mb-3">
-            <label className={styles.inputTitle}>List price per hour</label>
-            <input
-              type="text"
-              className={styles.inputBody}
-              spellCheck={false}
-              required={true}
-              name="price"
-              value={form.price}
-              onChange={handleChange}
-            />
-            {error.price.length > 0 && (
-              <span className={styles.inputError}>{error.price}</span>
-            )}
-          </div>
-          <div className="form-group mb-3">
-            <label className={styles.inputTitle}>Minimum hour</label>
-            <input
-              type="text"
-              className={styles.inputBody}
-              spellCheck={false}
-              required={true}
-              name="minHour"
-              value={form.minHour}
-              onChange={handleChange}
-            />
-            {error.minHour.length > 0 && (
-              <span className={styles.inputError}>{error.minHour}</span>
-            )}
-          </div>
-          <div className={`form-group mb-4 ${styles.flexContainer}`}>
-            <label className={styles.inputTitle}>Pickup address</label>
-            <div className={`${styles.inputBodyLong}`}>
-              <GooglePlacesAutocomplete
-                selectProps={{
-                  address,
-                  onChange: setAddress,
-                }}
-                autocompletionRequest={{
-                  componentRestrictions: {
-                    country: ['au'],
-                  }
-                }}
-              />
-            </div>
-          </div>
-          <div className="form-group mb-4">
-            <label className={styles.inputTitle}>Upload car image</label>
-            <input
-              type="file"
-              name="image"
-              onChange={(e) => setImage(e.target.files[0])}
-              required={true}
-            />
-          </div>
+          {error.address.length > 0 && (
+            <span className={styles.inputError}>{error.address}</span>
+          )}
+        </div>
+          
+        <form onSubmit={handleEdit}>
           <div className={`form-group ${styles.inputSubmit}`}>
             <LoadingButton
-              isLoading={isLoading}
+              isLoading={isEditLoading}
               text={"Edit listing"}
-              loadingText={"Submitting"}
+              loadingText={"Editing"}
               disabled={
-                error.year.length > 0 ||
-                error.plate.length > 0 ||
                 error.price.length > 0 ||
-                error.minHour.length > 0
+                error.minHour.length > 0 || 
+                error.address.length > 0
               }
             />
           </div>
@@ -307,12 +272,13 @@ function Listing() {
         <form onSubmit={handleCancel} className="mt-3">
           <div>
             <LoadingButtonOutline
-              isLoading={isLoading}
+              isLoading={isCancelLoading}
               text={"Cancel listing"}
               loadingtText={"Cancelling"}
             />
           </div>
         </form>
+
       </div>
     </div>
   );

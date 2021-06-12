@@ -134,7 +134,7 @@ function Stats() {
         <br />
 
         <h5 className={styles.formTitle}>Car listed</h5>
-        <p className={styles.subTitle}>Table shows all cars listed by you and hired by cutomers in the past</p>
+        <p className={styles.subTitle}>Table shows all cars listed by you and hired by customers in the past</p>
         <div className={`table-responsive ${styles.tableScrollable}`}>
           <table className={`table table-sm table-hover ${styles.tableCustom}`}>
             <thead>

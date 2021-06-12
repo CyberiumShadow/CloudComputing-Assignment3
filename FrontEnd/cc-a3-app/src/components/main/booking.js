@@ -5,42 +5,76 @@ import NavBar from "components/utils/navBar";
 import styles from "./main.module.css";
 import Car from "components/utils/car.jpg";
 import LoadingButton from "components/utils/loadingButton";
+import LoadingButtonOutline from "components/utils/loadingButtonOutline";
 
 function Booking() {
   const { authentication } = useAppContext();
   const history = useHistory();
   const location = useLocation();
+  const booking = location.state.data;
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isCompleteLoading, setIsCompleteLoading] = useState(false);
+  const [isCancelLoading, setIsCancelLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleComplete = async (e) => {
     e.preventDefault();
 
-    setIsLoading(true);    
+    setIsCompleteLoading(true);    
 
-    // await fetch(`https://api.neocar.link/`, {
-    //   method: "post",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: `Bearer ${authentication.accessToken}`,
-    //   },
-    // })
-    //   .then((response) => {
-    //     if (response.ok) {
-    //       return response.json();
-    //     }
-    //     throw response;
-    //   })
-    //   .then((response) => {
-    //     console.log(response);
-    //     window.alert("Booking cancelled successfully!");
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    await fetch(`https://api.neocar.link/cars/${booking.licence_plate}/bookings/${booking.booking_id}/complete`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authentication.accessToken}`,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw response;
+      })
+      .then((response) => {
+        console.log(response);
+        window.alert("Booking is completed!");
+        history.push("/dashboard");
+      })
+      .catch((err) => {
+        window.alert("Booking cannot be completed! Please try again.");
+        console.log(err);
+      });
 
-    // history.push("/dashboard");
-    setIsLoading(false);
+    setIsCompleteLoading(false);
+  };
+
+  const handleCancel = async (e) => {
+    e.preventDefault();
+
+    setIsCancelLoading(true);    
+
+    await fetch(`https://api.neocar.link/cars/${booking.licence_plate}/bookings/${booking.booking_id}`, {
+      method: "delete",
+      headers: {
+        Authorization: `Bearer ${authentication.accessToken}`,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw response;
+      })
+      .then((response) => {
+        console.log(response);
+        window.alert("Booking is cancelled!");
+        history.push("/dashboard");
+      })
+      .catch((err) => {
+        console.log(err);
+        window.alert("Booking cannot be cancelled! Please try again.");
+      });
+
+    setIsCancelLoading(false);
   };
 
   return (
@@ -67,36 +101,20 @@ function Booking() {
               <table className={`table table-sm table-hover w-auto ${styles.tableTopBorder}`}>
                 <tbody>
                   <tr>
-                    <td className={styles.tableTitle}>Car owner</td>
-                    <td>g4ge</td>
-                  </tr>
-                  <tr>
-                    <td className={styles.tableTitle}>Make</td>
-                    <td>Toyota</td>
-                  </tr>
-                  <tr>
-                    <td className={styles.tableTitle}>Model</td>
-                    <td>Corolla</td>
-                  </tr>
-                  <tr>
-                    <td className={styles.tableTitle}>Model Year</td>
-                    <td>2019</td>
+                    <td className={styles.tableTitle}>Booking ID</td>
+                    <td>{booking.booking_id}</td>
                   </tr>
                   <tr>
                     <td className={styles.tableTitle}>Licence plate</td>
-                    <td>ABC126</td>
+                    <td>{booking.licence_plate}</td>
                   </tr>
                   <tr>
                     <td className={styles.tableTitle}>From</td>
-                    <td>07 Aug, 09:00am</td>
+                    <td>todo</td>
                   </tr>
                   <tr>
                     <td className={styles.tableTitle}>To</td>
-                    <td>10 Aug, 09:00am</td>
-                  </tr>
-                  <tr>
-                    <td className={styles.tableTitle}>Pickup address</td>
-                    <td>124 La Trobe St, Melbourne VIC 3000</td>
+                    <td>todo</td>
                   </tr>
                 </tbody>
               </table>
@@ -104,10 +122,20 @@ function Booking() {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleComplete}>
           <div>
             <LoadingButton
-              isLoading={isLoading}
+              isLoading={isCompleteLoading}
+              text={"Complete booking"}
+              loadingText={"Completing"}
+            />
+          </div>
+        </form>
+
+        <form onSubmit={handleCancel} className="mt-3">
+          <div>
+            <LoadingButtonOutline
+              isLoading={isCancelLoading}
               text={"Cancel booking"}
               loadingText={"Cancelling"}
             />

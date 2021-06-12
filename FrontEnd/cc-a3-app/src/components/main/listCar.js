@@ -11,7 +11,7 @@ function ListCar() {
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
   const [image, setImage] = useState();
-  const [address, setAddress] = useState();
+  const [address, setAddress] = useState(null);
   const [form, setForm] = useState({
     plate: "",
     make: "",
@@ -26,6 +26,7 @@ function ListCar() {
     plate: "",
     price: "",
     minHour: "",
+    address: "",
   });
 
   useEffect(() => {
@@ -49,6 +50,7 @@ function ListCar() {
         form.minHour.length > 0 && !form.minHour.match(numbers)
           ? "Minimum hour must be numeric"
           : "",
+      address: "",
     });
   }, [form]);
 
@@ -92,12 +94,13 @@ function ListCar() {
       .then((response) => {
         console.log(response);
         window.alert("Listing successful!");
+        history.push("/dashboard");
       })
       .catch((err) => {
         console.log(err);
+        window.alert("Listing unsuccessful! Please try again.");
       });
 
-    // history.push("/dashboard");
     setIsLoading(false);
   };
 
@@ -111,22 +114,32 @@ function ListCar() {
         ? "Licence plate must be between 2 to 6 letters/numbers"
         : "";
     var errorPrice =
-      parseInt(form.price) === 0 ? "List price must be more than zero" : "";
+      parseInt(form.price) === 0 
+        ? "List price must be more than zero"
+        : "";
     var errorMinHour =
       parseInt(form.minHour) < 1 || parseInt(form.minHour) > 48
         ? "Minimum hour must be between 1 and 48"
         : "";
+    var errorAddress = 
+      address === null
+        ? "Pickup address is required"
+        : "";
+
     setError({
       year: errorYear,
       plate: errorPlate,
       price: errorPrice,
       minHour: errorMinHour,
+      address: errorAddress,
     });
+
     return (
       errorYear.length === 0 &&
       errorPlate.length === 0 &&
       errorPrice.length === 0 &&
-      errorMinHour.length === 0
+      errorMinHour.length === 0 &&
+      errorAddress.length === 0
     );
   };
 
@@ -247,6 +260,9 @@ function ListCar() {
                 }}
               />
             </div>
+            {error.address.length > 0 && (
+              <span className={styles.inputError}>{error.address}</span>
+            )}
           </div>
           <div className="form-group mb-4">
             <label className={styles.inputTitle}>Upload car image</label>
@@ -266,7 +282,8 @@ function ListCar() {
                 error.year.length > 0 ||
                 error.plate.length > 0 ||
                 error.price.length > 0 ||
-                error.minHour.length > 0
+                error.minHour.length > 0 ||
+                error.address.length > 0
               }
             />
           </div>
