@@ -66,8 +66,9 @@ function Listing() {
     }
     
     await fetch(`https://api.neocar.link/cars/${car.licence_plate}`, {
-      method: "patch",
+      method: "PATCH",
       headers: {
+	"Content-Type": "application/json",
         Authorization: `Bearer ${authentication.accessToken}`,
       },
       body: JSON.stringify(data),
