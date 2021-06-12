@@ -1,5 +1,5 @@
-resource "aws_dynamodb_table" "neocar_users" {
-  name           = "neocar_users"
+resource "aws_dynamodb_table" "users" {
+  name           = "users"
   billing_mode   = "PROVISIONED"
   write_capacity = 5
   read_capacity  = 5
@@ -38,7 +38,8 @@ resource "aws_dynamodb_table" "bookings" {
   write_capacity = 5
   read_capacity  = 5
 
-  hash_key = "booking_id"
+  hash_key  = "licence_plate"
+  range_key = "booking_id"
   attribute {
     name = "booking_id"
     type = "S"
@@ -57,14 +58,7 @@ resource "aws_dynamodb_table" "bookings" {
   global_secondary_index {
     name            = "Booking_UserID"
     hash_key        = "user_id"
-    projection_type = "ALL"
-    write_capacity  = 5
-    read_capacity   = 5
-  }
-
-  global_secondary_index {
-    name            = "Booking_CarID"
-    hash_key        = "licence_plate"
+    range_key       = "booking_id"
     projection_type = "ALL"
     write_capacity  = 5
     read_capacity   = 5
