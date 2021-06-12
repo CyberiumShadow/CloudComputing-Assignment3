@@ -1,6 +1,3 @@
-variable "LBListener" {
-}
-
 resource "aws_apigatewayv2_integration" "cars" {
   api_id             = aws_apigatewayv2_api.neocar_api.id
   integration_type   = "HTTP_PROXY"

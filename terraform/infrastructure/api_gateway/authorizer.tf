@@ -1,9 +1,3 @@
-variable "CognitoEndpoint" {
-}
-
-variable "CognitoClientID" {
-}
-
 resource "aws_apigatewayv2_authorizer" "JWT" {
   api_id           = aws_apigatewayv2_api.neocar_api.id
   authorizer_type  = "JWT"

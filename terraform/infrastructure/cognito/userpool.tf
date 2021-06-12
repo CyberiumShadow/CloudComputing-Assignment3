@@ -1,17 +1,3 @@
-variable "preSignupTrigger" {
-}
-
-variable "postConfirmTrigger" {
-}
-
-output "cognitoArn" {
-  value = aws_cognito_user_pool.login.arn
-}
-
-output "endpoint" {
-  value = aws_cognito_user_pool.login.endpoint
-}
-
 resource "aws_cognito_user_pool" "login" {
   # This is choosen when creating a user pool in the console
   name = "login"

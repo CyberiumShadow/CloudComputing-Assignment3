@@ -1,6 +1,3 @@
-variable "ecr_repo_url" {
-}
-
 data "aws_ecr_image" "api_image" {
   repository_name = "neocar"
   image_tag       = "buildx-latest"

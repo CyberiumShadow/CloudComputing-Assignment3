@@ -1,8 +1,3 @@
-
-output "lb_listener" {
-  value = aws_alb_listener.front_end.arn
-}
-
 resource "aws_alb" "main" {
   name            = "cb-load-balancer"
   subnets         = aws_subnet.public.*.id

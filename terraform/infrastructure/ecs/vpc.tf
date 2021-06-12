@@ -5,18 +5,6 @@ resource "aws_vpc" "main" {
   cidr_block = "172.17.0.0/16"
 }
 
-variable "az_count" {
-  default = 2
-}
-
-output "private_subnets" {
-  value = aws_subnet.private.*.id
-}
-
-output "security_group" {
-  value = aws_security_group.lb.id
-}
-
 # Create var.az_count private subnets, each in a different AZ
 resource "aws_subnet" "private" {
   count             = var.az_count

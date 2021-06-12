@@ -1,7 +1,3 @@
-variable "app_port" {
-  default = 3000
-}
-
 # ALB Security Group: Edit to restrict access to the application
 resource "aws_security_group" "lb" {
   name        = "cb-load-balancer-security-group"

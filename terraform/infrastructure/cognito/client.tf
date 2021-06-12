@@ -1,7 +1,3 @@
-output "userPoolID" {
-  value = aws_cognito_user_pool_client.login.id
-}
-
 resource "aws_cognito_user_pool_client" "login" {
   user_pool_id = aws_cognito_user_pool.login.id
 
