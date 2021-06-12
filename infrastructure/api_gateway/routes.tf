@@ -5,6 +5,23 @@ resource "aws_apigatewayv2_route" "root" {
   target             = "integrations/${aws_apigatewayv2_integration.cars.id}"
 }
 
+resource "aws_apigatewayv2_route" "getUserCurrentBooking" {
+  api_id             = aws_apigatewayv2_api.neocar_api.id
+  route_key          = "GET /users/{userid}/currentBooking"
+  authorization_type = "JWT"
+  authorizer_id      = aws_apigatewayv2_authorizer.JWT.id
+  target             = "integrations/${aws_apigatewayv2_integration.cars.id}"
+}
+
+resource "aws_apigatewayv2_route" "getUserCurrentListing" {
+  api_id             = aws_apigatewayv2_api.neocar_api.id
+  route_key          = "GET /users/{userid}/currentListing"
+  authorization_type = "JWT"
+  authorizer_id      = aws_apigatewayv2_authorizer.JWT.id
+  target             = "integrations/${aws_apigatewayv2_integration.cars.id}"
+}
+
+
 resource "aws_apigatewayv2_route" "getCars" {
   api_id             = aws_apigatewayv2_api.neocar_api.id
   route_key          = "GET /cars"
@@ -40,6 +57,14 @@ resource "aws_apigatewayv2_route" "deleteCar" {
 resource "aws_apigatewayv2_route" "postCarBookings" {
   api_id             = aws_apigatewayv2_api.neocar_api.id
   route_key          = "POST /cars/{carid}/bookings"
+  authorization_type = "JWT"
+  authorizer_id      = aws_apigatewayv2_authorizer.JWT.id
+  target             = "integrations/${aws_apigatewayv2_integration.cars.id}"
+}
+
+resource "aws_apigatewayv2_route" "postCarBookingCompletion" {
+  api_id             = aws_apigatewayv2_api.neocar_api.id
+  route_key          = "POST /cars/{carid}/bookings/{bookingid}/complete"
   authorization_type = "JWT"
   authorizer_id      = aws_apigatewayv2_authorizer.JWT.id
   target             = "integrations/${aws_apigatewayv2_integration.cars.id}"

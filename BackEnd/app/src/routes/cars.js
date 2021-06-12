@@ -198,6 +198,7 @@ router.post('/:carid/bookings', async (req, res) => {
       start_time: { N: `${body.start_time}` },
       end_time: { N: `${body.end_time}` },
       cost: { N: `${body.cost}` },
+      status: { S: 'Booked' },
     },
   };
   const updateUserParams = {
@@ -234,6 +235,47 @@ router.delete('/:carid/bookings/:bookingid', async (req, res) => {
   try {
     await dbClient.send(new DeleteItemCommand(deleteBookingParams));
     return res.status(200).json({ message: `${bookingid} deleted` });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+});
+
+router.post('/:carid/bookings/:bookingid/complete', async (req, res) => {
+  const {
+    params: { carid, bookingid },
+  } = req;
+  const updateBookingParams = {
+    TableName: 'bookings',
+    Key: {
+      licence_plate: { S: carid },
+      booking_id: { S: bookingid },
+    },
+    UpdateExpression: 'SET #status = :status',
+    ExpressionAttributeNames: {
+      '#status': 'status',
+    },
+    ExpressionAttributeValues: {
+      ':status': { S: 'Completed' },
+    },
+    ReturnValues: 'ALL_NEW',
+  };
+  try {
+    const {
+      Attributes: { user_id },
+    } = await dbClient.send(new UpdateItemCommand(updateBookingParams));
+    const updateUserParams = {
+      TableName: 'users',
+      Key: {
+        username: user_id,
+      },
+      UpdateExpression: 'SET currentBooking = :currentBooking',
+      ExpressionAttributeValues: {
+        ':currentBooking': { S: '' },
+      },
+    };
+    await dbClient.send(new UpdateItemCommand(updateUserParams));
+    return res.status(200).json({ message: `Booking ${bookingid} completed` });
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);
