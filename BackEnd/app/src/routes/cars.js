@@ -204,27 +204,22 @@ router.post('/:carid/bookings', async (req, res) => {
   };
   try {
     const { Items } = await dbClient.send(new QueryCommand(queryBookingParams));
-    let prevEnd = null;
-    let possible = false;
-    for (let i = 0; i < Items.length; i += 1) {
-      const start = Items[i].start_time.N;
-      const end = Items[i].end_time.N;
-      const bookingStart = body.start_time;
-      const bookingEnd = body.end_time;
-      console.log(`Prev End: ${prevEnd}`);
-      console.log(`Start: ${start}`);
-      console.log(`End: ${end}`);
-      console.log(`Booking Start: ${bookingStart}`);
-      console.log(`Booking End: ${bookingEnd}`);
-      console.log(`Booking Start > End: ${bookingStart > prevEnd}`);
-      console.log(`Booking End < Start: ${bookingEnd < start}`);
-      if (bookingStart > prevEnd && bookingEnd < start) {
-        possible = true;
-        break;
+    const bookings = Items.sort((a, b) => a.start_time.N - b.start_time.N);
+    const isNewSlotValid = (newSlot) => {
+      let isValid = true;
+
+      for (let i = 0; i < bookings.length; i++) {
+        if (
+          bookings[i].end_time.N > newSlot.start_time &&
+          bookings[i].end_time.N <= newSlot.end_time
+        ) {
+          isValid = false;
+        }
       }
-      prevEnd = end;
-    }
-    if (!possible) {
+
+      return isValid;
+    };
+    if (!isNewSlotValid(body)) {
       return res.status(409).json({ message: 'Booking Times conflict with existing bookings' });
     }
   } catch (err) {
