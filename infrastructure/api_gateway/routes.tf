@@ -5,17 +5,17 @@ resource "aws_apigatewayv2_route" "root" {
   target             = "integrations/${aws_apigatewayv2_integration.cars.id}"
 }
 
-resource "aws_apigatewayv2_route" "getUserCurrentBooking" {
+resource "aws_apigatewayv2_route" "getUserCurrentBookings" {
   api_id             = aws_apigatewayv2_api.neocar_api.id
-  route_key          = "GET /users/{userid}/currentBooking"
+  route_key          = "GET /users/{userid}/currentBookings"
   authorization_type = "JWT"
   authorizer_id      = aws_apigatewayv2_authorizer.JWT.id
   target             = "integrations/${aws_apigatewayv2_integration.cars.id}"
 }
 
-resource "aws_apigatewayv2_route" "getUserCurrentListing" {
+resource "aws_apigatewayv2_route" "getUserCurrentListings" {
   api_id             = aws_apigatewayv2_api.neocar_api.id
-  route_key          = "GET /users/{userid}/currentListing"
+  route_key          = "GET /users/{userid}/currentListings"
   authorization_type = "JWT"
   authorizer_id      = aws_apigatewayv2_authorizer.JWT.id
   target             = "integrations/${aws_apigatewayv2_integration.cars.id}"

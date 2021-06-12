@@ -27,6 +27,20 @@ resource "aws_dynamodb_table" "cars" {
     type = "S"
   }
 
+  attribute {
+    name = "owner"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name            = "Cars_Owner"
+    hash_key        = "owner"
+    range_key       = "licence_plate"
+    projection_type = "ALL"
+    write_capacity  = 5
+    read_capacity   = 5
+  }
+
   tags = {
     "Name" = "Neocar Cars"
   }
