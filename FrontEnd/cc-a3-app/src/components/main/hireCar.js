@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useAppContext } from "libs/context";
 import NavBar from "components/utils/navBar";
 import styles from "./main.module.css";
-import Car from "components/utils/car.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
 
@@ -47,7 +46,7 @@ function HireCar() {
                 <div className={`card ${styles.carCard}`}>
                   <img
                     className={`card-img-top rounded-top ${styles.carCardImage}`}
-                    src={Car}
+                    src={car.image}
                     alt="Car"
                   ></img>
                   <div className={`card-body rounded ${styles.carCardBody}`}>

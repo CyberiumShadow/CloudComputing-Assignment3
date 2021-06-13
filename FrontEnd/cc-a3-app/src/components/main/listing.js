@@ -6,7 +6,6 @@ import styles from "./main.module.css";
 import LoadingButton from "components/utils/loadingButton";
 import LoadingButtonOutline from "components/utils/loadingButtonOutline";
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
-import { ConsoleLogger } from "@aws-amplify/core";
 
 function Listing() {
   const { authentication } = useAppContext();
@@ -274,7 +273,7 @@ function Listing() {
             <LoadingButtonOutline
               isLoading={isCancelLoading}
               text={"Cancel listing"}
-              loadingtText={"Cancelling"}
+              loadingText={"Cancelling"}
             />
           </div>
         </form>

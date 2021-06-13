@@ -5,6 +5,8 @@ import styles from "./main.module.css";
 import LoadingButton from "components/utils/loadingButton";
 import { useAppContext } from "libs/context";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import { FacebookShareButton, TwitterShareButton, WhatsappShareButton } from "react-share";
+import { FacebookIcon, TwitterIcon, WhatsappIcon } from "react-share";
 
 function ListCar() {
   const { authentication } = useAppContext();
@@ -273,6 +275,37 @@ function ListCar() {
               required={true}
             />
           </div>
+
+          <div>
+            <label className={styles.inputTitle}>Share your listing</label>
+            <div className={styles.shareButtonWrapper}>
+              <FacebookShareButton
+                url={"https://neocar.link"}
+                quote={"I've just listed my car on NeoCar. Come & check it out!"}
+                hashtag={"#neocar"}
+              >
+                <FacebookIcon size={32} round={true} />
+              </FacebookShareButton>
+            </div>
+            <div className={styles.shareButtonWrapper}>
+              <TwitterShareButton
+                title={"I've just listed my car on NeoCar. Come & check it out!"}  
+                url={"https://neocar.link"}
+                hashtags={["neocar", "carrental"]}
+              >
+                <TwitterIcon size={32} round={true} />
+              </TwitterShareButton>
+            </div>
+            <div className={styles.shareButtonWrapper}>
+              <WhatsappShareButton
+                title={"I've just listed my car on NeoCar. Come & check it out!"}  
+                url={"https://neocar.link"}
+              >
+                <WhatsappIcon size={32} round={true} />
+              </WhatsappShareButton>
+            </div>
+          </div>
+
           <div className={`form-group ${styles.inputSubmit}`}>
             <LoadingButton
               isLoading={isLoading}

@@ -4,7 +4,6 @@ import { useAppContext } from "libs/context";
 import NavBar from "components/utils/navBar";
 import styles from "./main.module.css";
 import LoadingButton from "components/utils/loadingButton";
-import Car from "components/utils/car.jpg";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import setHours from "date-fns/setHours";
@@ -13,7 +12,6 @@ import setSeconds from "date-fns/setSeconds";
 import setMilliseconds from "date-fns/setMilliseconds";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faDollarSign, faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
-import { ConsoleLogger } from "@aws-amplify/core";
 
 function HiringCar() {
   const { authentication } = useAppContext();
@@ -80,7 +78,10 @@ function HiringCar() {
       })
       .catch((err) => {
         console.log(err);
-        window.alert("Booking unsuccessful! Please try again.");
+        if (err.status === 409)
+          window.alert("Booking unsuccessful! Booking times conflict with existing bookings. Please try other times.");  
+        else
+          window.alert("Booking unsuccessful! Please try again.");
       });
 
     setIsLoading(false);
@@ -120,7 +121,7 @@ function HiringCar() {
         <div className="row">
           <div className="col-xl-4 col-lg-5 col-md-12 col-sm-12 col-12 mb-3">
             <div className={styles.hireCarImageFrame}>
-              <img className={styles.hireCarImage} src={Car} alt="Car"></img>
+              <img className={styles.hireCarImage} src={car.image} alt="Car"></img>
             </div>
           </div>
           <div className="col-xl-8 col-lg-7 col-md-12 col-sm-12 col-12">

@@ -243,3 +243,10 @@ thead {
 .th6 { 
   width: 20%;
 }
+
+
+/* 7. share button  ------------------------------------------- */
+.shareButtonWrapper {
+  min-width: 40px;
+  display: inline-block;
+}

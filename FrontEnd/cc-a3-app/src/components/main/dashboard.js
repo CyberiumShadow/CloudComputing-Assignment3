@@ -2,18 +2,17 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import NavBar from "components/utils/navBar";
 import styles from "./main.module.css";
-import Car from "components/utils/car.jpg";
 import { useAppContext } from "libs/context";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
 
 function Dashboard() {
   const { authentication } = useAppContext();
-  const [bookings, setBookings] = useState(null);
-  const [listings, setListings] = useState(null);
-
+  const [bookings, setBookings] = useState([]);
+  const [listings, setListings] = useState([]);
+  
   useEffect(() => {
-    fetch(`https://api.neocar.link/users/${authentication.username}/currentBooking`, {
+    fetch(`https://api.neocar.link/users/${authentication.username}/currentBookings`, {
       method: "get",
       headers: {
         Accept: "application/json",
@@ -27,15 +26,14 @@ function Dashboard() {
         throw response;
       })
       .then((data) => {
-        console.log("booking");
         console.log(data);
-        setBookings(data)
+        setBookings(data);
       })
       .catch((err) => {
         console.log(err);
       });
 
-    fetch(`https://api.neocar.link/users/${authentication.username}/currentListing`, {
+    fetch(`https://api.neocar.link/users/${authentication.username}/currentListings`, {
       method: "get",
       headers: {
         Accept: "application/json",
@@ -49,13 +47,17 @@ function Dashboard() {
         throw response;
       })
       .then((data) => {
-        console.log("listing");
         console.log(data);
-        setListings(data)
+        setListings(data);
       })
       .catch((err) => {
         console.log(err);
       });
+
+      return () => {
+        setBookings([]);
+        setListings([]);
+      }
   }, []);
 
   return (
@@ -63,87 +65,91 @@ function Dashboard() {
       <NavBar currentPage={"Dashboard"} />
       <div className={styles.contentWrapper}>
         <h3 className={styles.pageTitle}>Dashboard</h3>
-        <hr />        
+        <hr />       
 
-        <h6 className={styles.formTitle}>Your upcoming booking</h6>
-        {bookings === null && (
+        <h6 className={styles.formTitle}>Your upcoming bookings</h6>
+        {bookings.length === 0 && (
           <p className="mb-5">
             <FontAwesomeIcon icon={faExclamationCircle} size="sm" fixedWidth />{" "}
             No booking at the moment. Hire a car now.
           </p>
         )}
-        {bookings !== null && (
+        {bookings.length > 0 && (
           <div className="row mb-2">
-            <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12 mb-3">
-              <div className={`card ${styles.carCard}`}>
-                <img
-                  className={`card-img-top rounded-top ${styles.carCardImage}`}
-                  src={Car}
-                  alt="Car"
-                ></img>
-                <div className={`card-body rounded ${styles.carCardBody}`}>
-                  <p className={`card-title ${styles.carCardTitle}`}>
-                    {bookings.licence_plate}
-                  </p>
-                  <div>
-                    from - to
+            {bookings.map(booking =>
+              <div key={booking.booking_id} className="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12 mb-3">
+                <div className={`card ${styles.carCard}`}>
+                  <img
+                    className={`card-img-top rounded-top ${styles.carCardImage}`}
+                    src={booking.image}
+                    alt="Car"
+                  ></img>
+                  <div className={`card-body rounded ${styles.carCardBody}`}>
+                    <p className={`card-title ${styles.carCardTitle}`}>
+                      {booking.licence_plate}
+                    </p>
+                    <div>
+                      {booking.start_time} - {booking.end_time}
+                    </div>
+                    <Link 
+                      className="stretched-link" 
+                      to={{
+                        pathname: `/dashboard/booking/${booking.licence_plate}`,
+                        state: {
+                          data: booking
+                        },
+                      }}>
+                    </Link>
                   </div>
-                  <Link 
-                    className="stretched-link" 
-                    to={{
-                      pathname: `/dashboard/booking/${bookings.licence_plate}`,
-                      state: {
-                        data: bookings
-                      },
-                    }}>
-                  </Link>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         )}
 
-        <h6 className={styles.formTitle}>Your current listed car</h6>
-        {listings === null && (
+        <h6 className={styles.formTitle}>Your current listed cars</h6>
+        {listings.length === 0 && (
           <p className="mb-5">
             <FontAwesomeIcon icon={faExclamationCircle} size="sm" fixedWidth />{" "}
             No car listed at the moment. List a car now.
           </p>
         )}
-        {listings !== null && (
+        {listings.length > 0 && (
           <div className="row">
-            <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12 mb-3">
-              <div className={`card ${styles.carCard}`}>
-                <img
-                  className={`card-img-top rounded-top ${styles.carCardImage}`}
-                  src={Car}
-                  alt="Car"
-                ></img>
-                <div className={`card-body rounded ${styles.carCardBody}`}>
-                  <p className={`card-title ${styles.carCardTitle}`}>
-                    {listings.make} {listings.model} {listings.year}
-                  </p>
-                  <p className="card-subtitle mb-2 text-muted">
-                    {listings.licence_plate}
-                  </p>
-                  <div>
-                    ${listings.price}/hr (min {listings.minHour}hrs)
+            {listings.map(listing =>
+              <div key={listing.licence_plate} className="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12 mb-3">
+                <div className={`card ${styles.carCard}`}>
+                  <img
+                    className={`card-img-top rounded-top ${styles.carCardImage}`}
+                    src={listing.image}
+                    alt="Car"
+                  ></img>
+                  <div className={`card-body rounded ${styles.carCardBody}`}>
+                    <p className={`card-title ${styles.carCardTitle}`}>
+                      {listing.make} {listing.model} {listing.year}
+                    </p>
+                    <p className="card-subtitle mb-2 text-muted">
+                      {listing.licence_plate}
+                    </p>
+                    <div>
+                      ${listing.price}/hr (min {listing.minHour}hr)
+                    </div>
+                    <div>
+                      <small>{listing.address}</small>
+                    </div>
+                    <Link 
+                      className="stretched-link" 
+                      to={{
+                        pathname: `/dashboard/listing/${listing.licence_plate}`,
+                        state: {
+                          data: listing
+                        },
+                      }}>
+                    </Link>
                   </div>
-                  <div>
-                    <small>{listings.address}</small>
-                  </div>
-                  <Link 
-                    className="stretched-link" 
-                    to={{
-                      pathname: `/dashboard/listing/${listings.licence_plate}`,
-                      state: {
-                        data: listings
-                      },
-                    }}>
-                  </Link>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         )}
       </div>
