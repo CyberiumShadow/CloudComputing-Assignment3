@@ -61,20 +61,24 @@ exports.handler = async (event) => {
       );
       const response = {
         statusCode: 200,
-        body: completedBookings,
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(completedBookings),
       };
+      console.log(response);
       return response;
     }
     const response = {
       statusCode: 404,
-      body: { message: "No Completed Bookings" },
+      body: JSON.stringify({ message: "No Completed Bookings" }),
     };
     return response;
   } catch (err) {
     console.log(err);
     const response = {
       statusCode: 500,
-      body: err,
+      body: JSON.stringify(err),
     };
     return response;
   }

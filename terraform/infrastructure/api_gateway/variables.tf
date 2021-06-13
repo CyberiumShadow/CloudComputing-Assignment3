@@ -17,5 +17,7 @@ variable "LBListener" {
 }
 
 variable "BookingHistory" {
+}
 
+variable "ListingHistory" {
 }

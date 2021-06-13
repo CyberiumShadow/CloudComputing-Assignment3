@@ -9,38 +9,21 @@ resource "aws_iam_role" "iam_for_lambda" {
       "Version" : "2012-10-17",
       "Statement" : [
         {
-          "Sid" : "ReadWriteTable",
+          "Sid" : "VisualEditor0",
           "Effect" : "Allow",
           "Action" : [
             "dynamodb:BatchGetItem",
-            "dynamodb:GetItem",
-            "dynamodb:Query",
-            "dynamodb:Scan",
+            "logs:CreateLogStream",
             "dynamodb:BatchWriteItem",
             "dynamodb:PutItem",
-            "dynamodb:UpdateItem"
+            "dynamodb:GetItem",
+            "dynamodb:Scan",
+            "dynamodb:Query",
+            "dynamodb:UpdateItem",
+            "logs:PutLogEvents",
+            "logs:CreateLogGroup",
+            "dynamodb:GetRecords"
           ],
-          "Resource" : "arn:aws:dynamodb:*:*:table/*"
-        },
-        {
-          "Sid" : "GetStreamRecords",
-          "Effect" : "Allow",
-          "Action" : "dynamodb:GetRecords",
-          "Resource" : "arn:aws:dynamodb:*:*:table/*/stream/* "
-        },
-        {
-          "Sid" : "WriteLogStreamsAndGroups",
-          "Effect" : "Allow",
-          "Action" : [
-            "logs:CreateLogStream",
-            "logs:PutLogEvents"
-          ],
-          "Resource" : "*"
-        },
-        {
-          "Sid" : "CreateLogGroup",
-          "Effect" : "Allow",
-          "Action" : "logs:CreateLogGroup",
           "Resource" : "*"
         }
       ]
@@ -81,7 +64,7 @@ resource "aws_lambda_function" "presignupTrigger" {
 
 resource "aws_lambda_function" "bookingHistory" {
   s3_bucket     = data.aws_s3_bucket.neocar_lambda.id
-  s3_key        = aws_s3_bucket_object.lambda_bookinghistory.id
+  s3_key        = aws_s3_bucket_object.lambda_bookingHistory.id
   function_name = "bookingHistory"
   role          = aws_iam_role.iam_for_lambda.arn
   handler       = "bookingHistory.handler"
@@ -90,6 +73,21 @@ resource "aws_lambda_function" "bookingHistory" {
   # For Terraform 0.11.11 and earlier, use the base64sha256() function and the file() function:
   # source_code_hash = "${base64sha256(file("lambda_function_payload.zip"))}"
   source_code_hash = filebase64sha256("../../artifacts/lambda/bookingHistory.zip")
+
+  runtime = "nodejs12.x"
+}
+
+resource "aws_lambda_function" "listingHistory" {
+  s3_bucket     = data.aws_s3_bucket.neocar_lambda.id
+  s3_key        = aws_s3_bucket_object.lambda_listingHistory.id
+  function_name = "listingHistory"
+  role          = aws_iam_role.iam_for_lambda.arn
+  handler       = "listingHistory.handler"
+
+  # The filebase64sha256() function is available in Terraform 0.11.12 and later
+  # For Terraform 0.11.11 and earlier, use the base64sha256() function and the file() function:
+  # source_code_hash = "${base64sha256(file("lambda_function_payload.zip"))}"
+  source_code_hash = filebase64sha256("../../artifacts/lambda/listingHistory.zip")
 
   runtime = "nodejs12.x"
 }

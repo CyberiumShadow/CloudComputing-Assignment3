@@ -8,8 +8,17 @@ resource "aws_apigatewayv2_integration" "cars" {
 }
 
 resource "aws_apigatewayv2_integration" "bookingHistory" {
-  api_id             = aws_apigatewayv2_api.neocar_api.id
-  integration_type   = "AWS_PROXY"
-  integration_method = "POST"
-  integration_uri    = var.BookingHistory
+  api_id                 = aws_apigatewayv2_api.neocar_api.id
+  integration_type       = "AWS_PROXY"
+  integration_method     = "POST"
+  payload_format_version = "2.0"
+  integration_uri        = var.BookingHistory
+}
+
+resource "aws_apigatewayv2_integration" "listingHistory" {
+  api_id                 = aws_apigatewayv2_api.neocar_api.id
+  integration_type       = "AWS_PROXY"
+  integration_method     = "POST"
+  payload_format_version = "2.0"
+  integration_uri        = var.ListingHistory
 }

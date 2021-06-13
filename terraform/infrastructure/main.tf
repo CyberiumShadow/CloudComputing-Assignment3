@@ -59,6 +59,7 @@ module "api" {
   LBSecurityGroup = module.ecs.security_group
   LBListener      = module.ecs.lb_listener
   BookingHistory  = module.lambda.bookingHistory
+  ListingHistory  = module.lambda.listingHistory
 }
 
 module "lambda" {

@@ -34,7 +34,7 @@ resource "aws_apigatewayv2_route" "getUserListingHistory" {
   route_key          = "GET /users/{userid}/listingHistory"
   authorization_type = "JWT"
   authorizer_id      = aws_apigatewayv2_authorizer.JWT.id
-  target             = "integrations/${aws_apigatewayv2_integration.cars.id}"
+  target             = "integrations/${aws_apigatewayv2_integration.listingHistory.id}"
 }
 
 resource "aws_apigatewayv2_route" "getCars" {
