@@ -6,8 +6,7 @@ resource "aws_cognito_user_pool" "login" {
   alias_attributes = ["email", "preferred_username"]
 
   lambda_config {
-    pre_sign_up       = var.preSignupTrigger
-    post_confirmation = var.postConfirmTrigger
+    pre_sign_up = var.preSignupTrigger
   }
 
   # POLICY

@@ -4,34 +4,6 @@ const { dbClient } = require('../lib/aws');
 
 const router = express.Router();
 
-const convertToDateStr = (epoch) => {
-  const dt = new Date(+epoch);
-  const months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
-  const year = dt.getFullYear();
-  const month = months[dt.getMonth()];
-  const date = dt.getDate();
-  let hour = dt.getHours();
-  const min = dt.getMinutes() < 10 ? `0${dt.getMinutes()}` : dt.getMinutes();
-  const ampm = hour < 12 ? 'am' : 'pm';
-  if (hour > 12) hour -= 12;
-  if (hour === 0) hour = 12;
-  if (hour < 10) hour = `0${hour}`;
-  return `${date} ${month} ${year}, ${hour}:${min}${ampm}`;
-};
-
 router.get('/:userid/currentBookings', async (req, res) => {
   const {
     params: { userid },
@@ -56,8 +28,8 @@ router.get('/:userid/currentBookings', async (req, res) => {
         booking_id: Item.booking_id.S,
         licence_plate: Item.licence_plate.S,
         user_id: userid,
-        start_time: convertToDateStr(Item.start_time.N),
-        end_time: convertToDateStr(Item.end_time.N),
+        start_time: Item.start_time.N,
+        end_time: Item.end_time.N,
         cost: Item.cost.N,
         image: Item.image.S,
         status: Item.status.S,
@@ -150,8 +122,8 @@ router.get('/:userid/bookingHistory', async (req, res) => {
             licence_plate: Booking.licence_plate.S,
             owner: owner.S,
             car: `${make.S} ${model.S} ${year.N}`,
-            start_time: convertToDateStr(Booking.start_time.N),
-            end_time: convertToDateStr(Booking.end_time.N),
+            start_time: Booking.start_time.N,
+            end_time: Booking.end_time.N,
             cost: Booking.cost.N,
           };
         })
@@ -210,8 +182,8 @@ router.get('/:userid/listingHistory', async (req, res) => {
               customer: Item.user_id.S,
               licence_plate: car.licence_plate,
               car: car.car,
-              start_time: convertToDateStr(Item.start_time.N),
-              end_time: convertToDateStr(Item.end_time.N),
+              start_time: Item.start_time.N,
+              end_time: Item.end_time.N,
               cost: Item.cost.N,
             })
           );

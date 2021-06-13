@@ -20,10 +20,9 @@ data "terraform_remote_state" "env" {
 }
 
 module "cognito" {
-  source             = "./cognito"
-  CertArn            = module.route53.acmCert
-  preSignupTrigger   = module.lambda.preSignupTrigger
-  postConfirmTrigger = module.lambda.postConfirmTrigger
+  source           = "./cognito"
+  CertArn          = module.route53.acmCert
+  preSignupTrigger = module.lambda.preSignupTrigger
 }
 
 module "route53" {
