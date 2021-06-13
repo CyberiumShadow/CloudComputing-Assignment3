@@ -22,6 +22,7 @@ const processItems = (data) => {
     processedData.push({
       licence_plate: car.licence_plate.S,
       ...(car.make && { make: car.make.S }),
+      ...(car.image && { image: car.image.S }),
       ...(car.model && { model: car.model.S }),
       ...(car.owner && { owner: car.owner.S }),
       ...(car.year && { year: car.year.N }),
@@ -76,18 +77,7 @@ router.post('/', uploader.single('image'), async (req, res) => {
           image: { S: `https://${uploadParams.Bucket}/${uploadParams.Key}` },
         },
       };
-      const updateUserParams = {
-        TableName: 'users',
-        Key: {
-          username: { S: owner },
-        },
-        ExpressionAttributeValues: {
-          ':plate': { S: plate },
-        },
-        UpdateExpression: 'SET currentListing = :plate',
-      };
       await dbClient.send(new PutItemCommand(newCarParams));
-      await dbClient.send(new UpdateItemCommand(updateUserParams));
       await s3Client.send(new PutObjectCommand(uploadParams));
       return res.status(200).send({ message: 'Car Listed' });
     }
@@ -228,31 +218,26 @@ router.post('/:carid/bookings', async (req, res) => {
     console.error(err);
     return res.status(500).json(err);
   }
+  const {
+    Item: { image },
+  } = await dbClient.send(
+    new GetItemCommand({ TableName: 'cars', Key: { licence_plate: { S: params.carid } } })
+  );
   const newBookingParams = {
     TableName: 'bookings',
     Item: {
       booking_id: { S: newID },
       licence_plate: { S: params.carid },
       user_id: { S: body.customer },
+      image: { S: image.S },
       start_time: { N: `${body.start_time}` },
       end_time: { N: `${body.end_time}` },
       cost: { N: `${body.cost}` },
       status: { S: 'Booked' },
     },
   };
-  const updateUserParams = {
-    TableName: 'users',
-    Key: {
-      username: { S: body.customer },
-    },
-    ExpressionAttributeValues: {
-      ':booking': { S: newID },
-    },
-    UpdateExpression: 'SET currentBooking = :booking',
-  };
   try {
     await dbClient.send(new PutItemCommand(newBookingParams));
-    await dbClient.send(new UpdateItemCommand(updateUserParams));
     return res.status(200).json({ booking_id: newID });
   } catch (err) {
     console.log(err);
@@ -300,20 +285,7 @@ router.post('/:carid/bookings/:bookingid/complete', async (req, res) => {
     ReturnValues: 'ALL_NEW',
   };
   try {
-    const {
-      Attributes: { user_id },
-    } = await dbClient.send(new UpdateItemCommand(updateBookingParams));
-    const updateUserParams = {
-      TableName: 'users',
-      Key: {
-        username: user_id,
-      },
-      UpdateExpression: 'SET currentBooking = :currentBooking',
-      ExpressionAttributeValues: {
-        ':currentBooking': { S: '' },
-      },
-    };
-    await dbClient.send(new UpdateItemCommand(updateUserParams));
+    await dbClient.send(new UpdateItemCommand(updateBookingParams));
     return res.status(200).json({ message: `Booking ${bookingid} completed` });
   } catch (err) {
     console.log(err);

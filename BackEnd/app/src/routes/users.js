@@ -97,10 +97,11 @@ router.get('/:userid/currentListings', async (req, res) => {
         address: Item.address.S,
         minHour: Item.minHour.N,
         price: Item.price.N,
+        image: Item.image.S,
       }));
       return res.status(200).json(currentListings);
     }
-    return res.status(404).json({ message: 'No Current Booking' });
+    return res.status(404).json({ message: 'No Current Listings' });
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);
