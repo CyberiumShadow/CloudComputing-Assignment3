@@ -81,62 +81,6 @@ router.get('/:userid/currentListings', async (req, res) => {
   }
 });
 
-router.get('/:userid/bookingHistory', async (req, res) => {
-  const {
-    params: { userid },
-  } = req;
-  const queryBookingParams = {
-    TableName: 'bookings',
-    IndexName: 'Booking_UserID',
-    KeyConditionExpression: 'user_id = :userid',
-    FilterExpression: '#status = :status',
-    ExpressionAttributeNames: {
-      '#status': 'status',
-    },
-    ExpressionAttributeValues: {
-      ':userid': { S: userid },
-      ':status': { S: 'Completed' },
-    },
-  };
-  try {
-    const { Items } = await dbClient.send(new QueryCommand(queryBookingParams));
-    if (Items.length > 0) {
-      const completedBookings = await Promise.all(
-        Items.map(async (Booking) => {
-          const getOwnerParams = {
-            TableName: 'cars',
-            Key: {
-              licence_plate: { S: Booking.licence_plate.S },
-            },
-            ExpressionAttributeNames: {
-              '#owner': 'owner',
-              '#year': 'year',
-            },
-            ProjectionExpression: '#owner, make, model, #year',
-          };
-          const {
-            Item: { owner, make, model, year },
-          } = await dbClient.send(new GetItemCommand(getOwnerParams));
-          return {
-            booking_id: Booking.booking_id.S,
-            licence_plate: Booking.licence_plate.S,
-            owner: owner.S,
-            car: `${make.S} ${model.S} ${year.N}`,
-            start_time: Booking.start_time.N,
-            end_time: Booking.end_time.N,
-            cost: Booking.cost.N,
-          };
-        })
-      );
-      return res.status(200).json(completedBookings);
-    }
-    return res.status(404).json({ message: 'No Completed Bookings' });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json(err);
-  }
-});
-
 router.get('/:userid/listingHistory', async (req, res) => {
   const {
     params: { userid },

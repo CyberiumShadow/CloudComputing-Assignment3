@@ -1,5 +1,5 @@
 package:
-	cd ./cognito/postconfirm && \
+	cd ./cognito/bookingHistory && \
 	npm run pack && \
 	cd ../presignup && \
 	npm run pack
