@@ -1,7 +1,7 @@
 import { Link, withRouter } from "react-router-dom";
 import Auth from "@aws-amplify/auth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faEdit, faCar, faHome, faPowerOff, faChartLine } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faCar, faHome, faPowerOff, faChartLine } from "@fortawesome/free-solid-svg-icons";
 import { useAppContext } from "libs/context";
 import "./utils.css";
 
