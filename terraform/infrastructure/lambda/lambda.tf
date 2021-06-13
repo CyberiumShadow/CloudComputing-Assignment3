@@ -1,18 +1,3 @@
-output "preSignupTrigger" {
-  value = aws_lambda_function.cognitoTriggers["presignup"].arn
-}
-
-output "postConfirmTrigger" {
-  value = aws_lambda_function.cognitoTriggers["postconfirm"].arn
-}
-
-variable "cognitoArn" {
-}
-
-locals {
-  lambdaFuncNames = toset(["presignup", "postconfirm"])
-}
-
 resource "aws_iam_role" "iam_for_lambda" {
   name = "iam_for_lambda"
 
