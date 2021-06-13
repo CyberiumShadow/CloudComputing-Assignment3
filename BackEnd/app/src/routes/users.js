@@ -1,99 +1,225 @@
 const express = require('express');
-const { GetItemCommand, QueryCommand } = require('@aws-sdk/client-dynamodb');
+const { QueryCommand, GetItemCommand } = require('@aws-sdk/client-dynamodb');
 const { dbClient } = require('../lib/aws');
 
 const router = express.Router();
 
-router.get('/:userid/currentBooking', async (req, res) => {
+const convertToDateStr = (epoch) => {
+  const dt = new Date(+epoch);
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+  const year = dt.getFullYear();
+  const month = months[dt.getMonth()];
+  const date = dt.getDate();
+  let hour = dt.getHours();
+  const min = dt.getMinutes() < 10 ? `0${dt.getMinutes()}` : dt.getMinutes();
+  const ampm = hour < 12 ? 'am' : 'pm';
+  if (hour > 12) hour -= 12;
+  if (hour === 0) hour = 12;
+  if (hour < 10) hour = `0${hour}`;
+  return `${date} ${month} ${year}, ${hour}:${min}${ampm}`;
+};
+
+router.get('/:userid/currentBookings', async (req, res) => {
   const {
     params: { userid },
   } = req;
-  const getUserParams = {
-    TableName: 'users',
-    Key: {
-      username: { S: userid },
-    },
-    ProjectionExpression: 'currentBooking',
-  };
   try {
-    const { Item } = await dbClient.send(new GetItemCommand(getUserParams));
-    if (Item) {
-      const bookingid = Item.currentBooking.S;
-      const queryBookingParams = {
-        TableName: 'bookings',
-        IndexName: 'Booking_UserID',
-        KeyConditionExpression: 'user_id = :userid AND booking_id = :bookingid',
-        ExpressionAttributeValues: {
-          ':userid': { S: userid },
-          ':bookingid': { S: bookingid },
-        },
-      };
-      const { Items } = await dbClient.send(new QueryCommand(queryBookingParams));
-      if (Items.length > 0) {
-        const currentBooking = {
-          booking_id: Items[0].booking_id.S,
-          licence_plate: Items[0].licence_plate.S,
-          user_id: userid,
-          start_time: Items[0].start_time.N,
-          end_time: Items[0].end_time.N,
-          cost: Items[0].cost.N,
-          status: Items[0].status.S,
-        };
-        return res.status(200).json(currentBooking);
-      }
-      return res.status(404).json({ message: 'No Current Booking' });
+    const queryBookingParams = {
+      TableName: 'bookings',
+      IndexName: 'Booking_UserID',
+      KeyConditionExpression: 'user_id = :userid',
+      FilterExpression: '#status = :status',
+      ExpressionAttributeNames: {
+        '#status': 'status',
+      },
+      ExpressionAttributeValues: {
+        ':userid': { S: userid },
+        ':status': { S: 'Booked' },
+      },
+    };
+    const { Items } = await dbClient.send(new QueryCommand(queryBookingParams));
+    if (Items.length > 0) {
+      const currentBookings = Items.map((Item) => ({
+        booking_id: Item.booking_id.S,
+        licence_plate: Item.licence_plate.S,
+        user_id: userid,
+        start_time: convertToDateStr(Item.start_time.N),
+        end_time: convertToDateStr(Item.end_time.N),
+        cost: Item.cost.N,
+        image: Item.image.S,
+        status: Item.status.S,
+      }));
+      return res.status(200).json(currentBookings);
     }
-    return res.status(404).json({ message: 'User Not Found' });
+    return res.status(404).json({ message: 'No Current Booking' });
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);
   }
 });
 
-router.get('/:userid/currentListing', async (req, res) => {
+router.get('/:userid/currentListings', async (req, res) => {
   const {
     params: { userid },
   } = req;
-  const getUserParams = {
-    TableName: 'users',
-    Key: {
-      username: { S: userid },
+  try {
+    const queryListingParams = {
+      TableName: 'cars',
+      IndexName: 'Cars_Owner',
+      KeyConditionExpression: '#owner = :owner',
+      ExpressionAttributeNames: {
+        '#owner': 'owner',
+      },
+      ExpressionAttributeValues: {
+        ':owner': { S: userid },
+      },
+    };
+    const { Items } = await dbClient.send(new QueryCommand(queryListingParams));
+    if (Items.length > 0) {
+      const currentListings = Items.map((Item) => ({
+        licence_plate: Item.licence_plate.S,
+        owner: userid,
+        make: Item.make.S,
+        model: Item.model.S,
+        year: Item.year.N,
+        address: Item.address.S,
+        minHour: Item.minHour.N,
+        price: Item.price.N,
+        image: Item.image.S,
+      }));
+      return res.status(200).json(currentListings);
+    }
+    return res.status(404).json({ message: 'No Current Listings' });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+});
+
+router.get('/:userid/bookingHistory', async (req, res) => {
+  const {
+    params: { userid },
+  } = req;
+  const queryBookingParams = {
+    TableName: 'bookings',
+    IndexName: 'Booking_UserID',
+    KeyConditionExpression: 'user_id = :userid',
+    FilterExpression: '#status = :status',
+    ExpressionAttributeNames: {
+      '#status': 'status',
     },
-    ProjectionExpression: 'currentListing',
+    ExpressionAttributeValues: {
+      ':userid': { S: userid },
+      ':status': { S: 'Completed' },
+    },
   };
   try {
-    const { Item } = await dbClient.send(new GetItemCommand(getUserParams));
-    if (Item) {
-      const carid = Item.currentListing.S;
-      const queryListingParams = {
-        TableName: 'cars',
-        KeyConditionExpression: 'licence_plate = :licenceplate',
-        FilterExpression: '#owner = :owner',
-        ExpressionAttributeNames: {
-          '#owner': 'owner',
-        },
-        ExpressionAttributeValues: {
-          ':owner': { S: userid },
-          ':licenceplate': { S: carid },
-        },
-      };
-      const { Items } = await dbClient.send(new QueryCommand(queryListingParams));
-      if (Items.length > 0) {
-        const currentListing = {
-          licence_plate: Items[0].licence_plate.S,
-          owner: userid,
-          make: Items[0].make.S,
-          model: Items[0].model.S,
-          year: Items[0].year.N,
-          address: Items[0].address.S,
-          minHour: Items[0].minHour.N,
-          price: Items[0].price.N,
-        };
-        return res.status(200).json(currentListing);
-      }
-      return res.status(404).json({ message: 'No Current Booking' });
+    const { Items } = await dbClient.send(new QueryCommand(queryBookingParams));
+    if (Items.length > 0) {
+      const completedBookings = await Promise.all(
+        Items.map(async (Booking) => {
+          const getOwnerParams = {
+            TableName: 'cars',
+            Key: {
+              licence_plate: { S: Booking.licence_plate.S },
+            },
+            ExpressionAttributeNames: {
+              '#owner': 'owner',
+              '#year': 'year',
+            },
+            ProjectionExpression: '#owner, make, model, #year',
+          };
+          const {
+            Item: { owner, make, model, year },
+          } = await dbClient.send(new GetItemCommand(getOwnerParams));
+          return {
+            booking_id: Booking.booking_id.S,
+            licence_plate: Booking.licence_plate.S,
+            owner: owner.S,
+            car: `${make.S} ${model.S} ${year.N}`,
+            start_time: convertToDateStr(Booking.start_time.N),
+            end_time: convertToDateStr(Booking.end_time.N),
+            cost: Booking.cost.N,
+          };
+        })
+      );
+      return res.status(200).json(completedBookings);
     }
-    return res.status(404).json({ message: 'User Not Found' });
+    return res.status(404).json({ message: 'No Completed Bookings' });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+});
+
+router.get('/:userid/listingHistory', async (req, res) => {
+  const {
+    params: { userid },
+  } = req;
+  const queryCarsParams = {
+    TableName: 'cars',
+    IndexName: 'Cars_Owner',
+    KeyConditionExpression: '#owner = :owner',
+    ProjectionExpression: 'licence_plate, make, model, #year',
+    ExpressionAttributeNames: {
+      '#owner': 'owner',
+      '#year': 'year',
+    },
+    ExpressionAttributeValues: {
+      ':owner': { S: userid },
+    },
+  };
+  try {
+    const { Items } = await dbClient.send(new QueryCommand(queryCarsParams));
+    if (Items.length > 0) {
+      const cars = Items.map((Item) => ({
+        licence_plate: Item.licence_plate.S,
+        car: `${Item.make.S} ${Item.model.S} ${Item.year.N}`,
+      }));
+      const bookings = [];
+      await Promise.all(
+        cars.map(async (car) => {
+          const queryBookingParams = {
+            TableName: 'bookings',
+            KeyConditionExpression: 'licence_plate = :licence_plate',
+            FilterExpression: '#status = :status',
+            ExpressionAttributeNames: {
+              '#status': 'status',
+            },
+            ExpressionAttributeValues: {
+              ':licence_plate': { S: car.licence_plate },
+              ':status': { S: 'Completed' },
+            },
+          };
+          const results = (await dbClient.send(new QueryCommand(queryBookingParams))).Items;
+          results.map((Item) =>
+            bookings.push({
+              customer: Item.user_id.S,
+              licence_plate: car.licence_plate,
+              car: car.car,
+              start_time: convertToDateStr(Item.start_time.N),
+              end_time: convertToDateStr(Item.end_time.N),
+              cost: Item.cost.N,
+            })
+          );
+        })
+      );
+      return res.status(200).send(bookings);
+    }
+    return res.status(404).json({ message: 'No Completed Bookings' });
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);
