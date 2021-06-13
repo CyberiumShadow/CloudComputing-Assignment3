@@ -59,6 +59,7 @@ router.get('/:userid/currentBookings', async (req, res) => {
         start_time: convertToDateStr(Item.start_time.N),
         end_time: convertToDateStr(Item.end_time.N),
         cost: Item.cost.N,
+        image: Item.image.S,
         status: Item.status.S,
       }));
       return res.status(200).json(currentBookings);
