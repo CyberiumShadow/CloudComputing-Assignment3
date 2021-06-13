@@ -5,6 +5,7 @@ import styles from "./main.module.css";
 import { useAppContext } from "libs/context";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
+import convertToDateStr from "components/utils/convertToDateStr";
 
 function Dashboard() {
   const { authentication } = useAppContext();
@@ -89,7 +90,7 @@ function Dashboard() {
                       {booking.licence_plate}
                     </p>
                     <div>
-                      {booking.start_time} - {booking.end_time}
+                      {convertToDateStr(booking.start_time)} - {convertToDateStr(booking.end_time)}
                     </div>
                     <Link 
                       className="stretched-link" 

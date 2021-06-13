@@ -4,6 +4,7 @@ import styles from "./main.module.css";
 import { useAppContext } from "libs/context";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
+import convertToDateStr from "components/utils/convertToDateStr";
 
 function Stats() {
   const { authentication } = useAppContext();
@@ -87,8 +88,8 @@ function Stats() {
                     <td>{booking.car}</td>
                     <td>{booking.licence_plate}</td>
                     <td>${booking.cost}</td>
-                    <td>{booking.start_time}</td>
-                    <td>{booking.end_time}</td>
+                    <td>{convertToDateStr(booking.start_time)}</td>
+                    <td>{convertToDateStr(booking.end_time)}</td>
                   </tr>
                 )}
               </tbody>
@@ -126,8 +127,8 @@ function Stats() {
                     <td>{listing.car}</td>
                     <td>{listing.licence_plate}</td>
                     <td>${listing.cost}</td>
-                    <td>{listing.start_time}</td>
-                    <td>{listing.end_time}</td>
+                    <td>{convertToDateStr(listing.start_time)}</td>
+                    <td>{convertToDateStr(listing.end_time)}</td>
                   </tr>
                 )}
               </tbody>

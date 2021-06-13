@@ -5,13 +5,14 @@ import NavBar from "components/utils/navBar";
 import styles from "./main.module.css";
 import LoadingButton from "components/utils/loadingButton";
 import LoadingButtonOutline from "components/utils/loadingButtonOutline";
+import convertToDateStr from "components/utils/convertToDateStr";
 
 function Booking() {
   const { authentication } = useAppContext();
   const history = useHistory();
   const location = useLocation();
   const booking = location.state.data;
-  console.log(booking)
+  
   const [isCompleteLoading, setIsCompleteLoading] = useState(false);
   const [isCancelLoading, setIsCancelLoading] = useState(false);
 
@@ -112,11 +113,11 @@ function Booking() {
                   </tr>
                   <tr>
                     <td className={styles.tableTitle}>From</td>
-                    <td>{booking.start_time}</td>
+                    <td>{convertToDateStr(booking.start_time)}</td>
                   </tr>
                   <tr>
                     <td className={styles.tableTitle}>To</td>
-                    <td>{booking.end_time}</td>
+                    <td>{convertToDateStr(booking.end_time)}</td>
                   </tr>
                 </tbody>
               </table>
