@@ -58,12 +58,14 @@ module "api" {
   VPCSubnets      = module.ecs.private_subnets
   LBSecurityGroup = module.ecs.security_group
   LBListener      = module.ecs.lb_listener
+  BookingHistory  = module.lambda.bookingHistory
 }
 
 module "lambda" {
   source = "./lambda"
 
   cognitoArn = module.cognito.cognitoArn
+  gatewayArn = module.api.GatewayARN
 }
 
 module "beanstalk" {

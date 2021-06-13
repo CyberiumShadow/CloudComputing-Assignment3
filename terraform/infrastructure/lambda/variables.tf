@@ -1,6 +1,5 @@
 variable "cognitoArn" {
 }
 
-locals {
-  lambdaFuncNames = toset(["presignup", "postconfirm"])
+variable "gatewayArn" {
 }

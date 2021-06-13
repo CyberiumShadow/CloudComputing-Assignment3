@@ -6,3 +6,10 @@ resource "aws_apigatewayv2_integration" "cars" {
   connection_type    = "VPC_LINK"
   connection_id      = aws_apigatewayv2_vpc_link.vpclink.id
 }
+
+resource "aws_apigatewayv2_integration" "bookingHistory" {
+  api_id             = aws_apigatewayv2_api.neocar_api.id
+  integration_type   = "AWS_PROXY"
+  integration_method = "POST"
+  integration_uri    = var.BookingHistory
+}

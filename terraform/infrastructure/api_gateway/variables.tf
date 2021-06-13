@@ -15,3 +15,7 @@ variable "LBSecurityGroup" {
 
 variable "LBListener" {
 }
+
+variable "BookingHistory" {
+
+}
