@@ -93,17 +93,22 @@ resource "aws_lambda_function" "listingHistory" {
 }
 
 resource "aws_lambda_permission" "allow_gateway" {
+  for_each      = toset(["bookingHistory", "listingHistory"])
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
-  function_name = "bookingHistory"
+  function_name = each.key
   principal     = "apigateway.amazonaws.com"
-  source_arn    = var.gatewayArn
+  source_arn    = "${var.gatewayArn}/*"
+
+  depends_on = [
+    aws_lambda_function.bookingHistory, aws_lambda_function.listingHistory
+  ]
 }
 
 resource "aws_lambda_permission" "allow_cognito" {
   statement_id  = "AllowExecutionfromCognito"
   action        = "lambda:InvokeFunction"
-  function_name = "presignup_trigger"
+  function_name = aws_lambda_function.presignupTrigger.function_name
   principal     = "email.cognito-idp.amazonaws.com"
   source_arn    = var.cognitoArn
 }

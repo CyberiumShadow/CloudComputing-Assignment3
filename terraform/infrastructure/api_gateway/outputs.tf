@@ -11,5 +11,5 @@ output "APIZone" {
 }
 
 output "GatewayARN" {
-  value = aws_apigatewayv2_api.neocar_api.arn
+  value = aws_apigatewayv2_api.neocar_api.execution_arn
 }
